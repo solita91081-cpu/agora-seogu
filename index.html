@@ -1,0 +1,1599 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>아고라 서구 — 시행 전에 먼저 여는 주민 광장</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+/* =========================================================
+   0. 색상·글꼴 (여기 값만 바꾸면 페이지 전체 색이 바뀝니다)
+   ========================================================= */
+:root{
+  --bg:#F3EFE6; --paper:#FBF8F2; --ink:#17160F; --ink2:#4A473D; --muted:#8A8577; --line:#DDD6C7;
+  --green:#1E6B45; --green-l:#DDF1E4; --mint:#BFE8CF; --glow:#9BD8B2;
+  --bad:#FF8A65; --meh:#F6C453; --good:#7ED6A0;
+  --sky:#CFE3F4; --peach:#F8D9C4; --butter:#F6E7A8; --lav:#DCD5F6; --mint2:#CDEFD9; --rose:#F5CFD8;
+  --serif:"Noto Serif KR","Nanum Myeongjo","Batang",serif;
+  --sans:"Pretendard Variable",Pretendard,"Malgun Gothic","Apple SD Gothic Neo",sans-serif;
+  --ease:cubic-bezier(.2,.8,.2,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;word-break:keep-all}
+body.lock{overflow:hidden}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:400;opacity:.5;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+img,svg{max-width:100%}
+button{font-family:inherit}
+::selection{background:var(--mint)}
+
+/* 공통 움직임 */
+@keyframes rise{to{opacity:1;transform:none}}
+@keyframes up{to{transform:none}}
+@keyframes pop{to{transform:scale(1)}}
+@keyframes blink{50%{opacity:0}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@keyframes shake{20%,60%{transform:translateX(-4px)}40%,80%{transform:translateX(4px)}}
+@keyframes pulse{0%{transform:scale(.9);opacity:1}100%{transform:scale(1.45);opacity:0}}
+
+/* =========================================================
+   1. 상단 진행 막대 · 메뉴바
+   ========================================================= */
+.progress{position:fixed;top:0;left:0;height:3px;width:0;background:var(--green);z-index:90}
+.nav{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:80;width:min(1180px,calc(100% - 32px));
+  display:flex;align-items:center;justify-content:space-between;gap:20px;padding:9px 10px 9px 18px;border-radius:999px;
+  border:1px solid transparent;transition:background .4s,box-shadow .4s,border-color .4s}
+.nav.scrolled{background:rgba(251,248,242,.74);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-color:rgba(23,22,15,.07);box-shadow:0 10px 30px -14px rgba(23,22,15,.25)}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px;letter-spacing:-.02em;color:inherit;text-decoration:none}
+.logo small{font-weight:600;font-size:12px;opacity:.55;margin-left:2px}
+.nav-links{display:flex;gap:2px}
+.nav-links a{font-size:14px;color:var(--ink2);text-decoration:none;padding:7px 13px;border-radius:999px;transition:background .3s,color .3s}
+.nav-links a:hover{background:rgba(23,22,15,.06);color:var(--ink)}
+.nav-cta{background:var(--ink);color:var(--bg);border:0;border-radius:999px;padding:10px 18px;font-weight:700;font-size:14px;cursor:pointer}
+@media (max-width:960px){.nav-links{display:none}}
+
+/* =========================================================
+   2. 공통 버튼 · 등장 효과
+   ========================================================= */
+.btn{display:inline-flex;align-items:center;gap:10px;padding:15px 26px;border-radius:999px;font-weight:700;font-size:15px;border:0;cursor:pointer;
+  text-decoration:none;transition:transform .35s var(--ease),background .3s,color .3s,box-shadow .3s;will-change:transform}
+.btn-dark{background:var(--ink);color:var(--bg)}
+.btn-dark:hover{box-shadow:0 14px 30px -12px rgba(23,22,15,.55)}
+.btn-line{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--ink)}
+.btn-line:hover{background:var(--ink);color:var(--bg)}
+.btn .arr{transition:transform .3s}
+.btn:hover .arr{transform:translateX(4px)}
+[data-reveal]{opacity:0;transform:translateY(40px);transition:opacity 1s var(--ease),transform 1s var(--ease);transition-delay:var(--dl,0s)}
+[data-reveal="left"]{transform:translateX(-50px)}
+[data-reveal="scale"]{transform:scale(.92)}
+[data-reveal].in{opacity:1;transform:none}
+
+/* =========================================================
+   3. 인트로 (같은 정책, 여섯 개의 하루)
+   ========================================================= */
+.intro{position:fixed;inset:0;z-index:200;background:#11100B;color:#F3EFE6;display:flex;flex-direction:column;transition:transform 1.1s cubic-bezier(.77,0,.18,1)}
+.intro.out{transform:translateY(-101%)}
+.intro.gone{display:none}
+.intro.paused *{animation-play-state:paused!important}
+.intro::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 115%,rgba(155,216,178,.14),transparent 60%)}
+.i-bars{display:flex;gap:6px;padding:16px 24px 0;position:relative;z-index:3}
+.i-bars span{flex:1;height:3px;border-radius:3px;background:rgba(243,239,230,.16);overflow:hidden}
+.i-bars i{display:block;height:100%;width:0;background:#F3EFE6}
+.i-bars .done i{width:100%}
+.i-bars .on i{animation:fill var(--d,6s) linear forwards}
+@keyframes fill{to{width:100%}}
+.i-top{display:flex;align-items:center;justify-content:space-between;padding:12px 24px;position:relative;z-index:3}
+.i-btns{display:flex;gap:8px}
+.i-btn{background:rgba(243,239,230,.06);border:1px solid rgba(243,239,230,.2);color:#F3EFE6;padding:8px 16px;border-radius:999px;font-size:13px;cursor:pointer;transition:background .3s}
+.i-btn:hover{background:rgba(243,239,230,.16)}
+.i-stage{flex:1;position:relative;cursor:pointer}
+.i-hint{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);font-size:12px;color:rgba(243,239,230,.38);z-index:3;white-space:nowrap;pointer-events:none}
+.slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:10px 24px 50px;opacity:0;visibility:hidden;transition:opacity .7s,visibility .7s;overflow-y:auto}
+.slide.on{opacity:1;visibility:visible}
+
+/* 3-1. 제목 장면 */
+.ttl{text-align:center;max-width:1000px}
+.ttl-k{display:inline-block;font-size:13px;letter-spacing:.25em;color:var(--glow);margin-bottom:22px}
+.ttl h2,.sum h2{font-family:var(--serif);font-weight:900;font-size:clamp(34px,6.4vw,84px);line-height:1.18;letter-spacing:-.03em}
+.ln{display:block;overflow:hidden;padding-bottom:.06em}
+.ln>span{display:inline-block;transform:translateY(112%)}
+.slide.on .ln>span{animation:up 1s var(--ease) forwards;animation-delay:var(--dl,0s)}
+.ttl-chips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:34px}
+.ttl-chips span{padding:11px 18px;border-radius:999px;border:1px solid rgba(243,239,230,.24);font-size:15px;opacity:0;transform:translateY(14px)}
+.ttl-chips b{color:var(--glow);margin-right:6px}
+.slide.on .ttl-chips span{animation:rise .7s var(--ease) forwards;animation-delay:var(--dl)}
+.ttl-note{margin-top:22px;font-size:12px;color:rgba(243,239,230,.4)}
+
+/* 3-2. 인물 장면: 왼쪽 미니 무대(디오라마) + 오른쪽 속마음 */
+.scene{width:min(1140px,100%);display:grid;grid-template-columns:1.12fr .88fr;gap:clamp(24px,4vw,56px);align-items:center}
+.dio{position:relative;aspect-ratio:5/4;max-height:calc(100vh - 170px);border-radius:28px;overflow:hidden;background:linear-gradient(180deg,var(--s1),var(--s2));
+  box-shadow:0 40px 80px -30px rgba(0,0,0,.6);transform:scale(.94);opacity:0}
+.slide.on .dio{animation:rise 1s var(--ease) forwards}
+.dio-sun{position:absolute;top:10%;right:12%;width:clamp(40px,6vw,70px);aspect-ratio:1;border-radius:50%;background:var(--sun);box-shadow:0 0 80px 12px var(--sun);transform:translateY(40px);opacity:0}
+.slide.on .dio-sun{animation:rise 1.6s .3s ease-out forwards}
+.dio-ground{position:absolute;left:-5%;right:-5%;bottom:0;height:28%;background:var(--gr);border-radius:50% 50% 0 0/18% 18% 0 0}
+.dio-sign{position:absolute;top:8%;left:7%;padding:7px 14px;border-radius:10px;background:rgba(255,255,255,.92);color:#1c1b16;font-weight:800;
+  font-size:clamp(11px,1.1vw,14px);transform-origin:top center;transform:rotate(-8deg) translateY(-160%);z-index:2}
+.slide.on .dio-sign{animation:sign 1s .5s cubic-bezier(.3,1.6,.5,1) forwards}
+@keyframes sign{to{transform:rotate(-3deg)}}
+.prop{position:absolute;left:var(--x);top:var(--y);font-size:var(--fs);line-height:1;opacity:0;transform:translateY(20px)}
+.slide.on .prop{animation:rise .8s var(--ease) forwards,floaty 4s ease-in-out infinite;animation-delay:var(--dl),calc(var(--dl) + .8s)}
+.char{position:absolute;left:var(--cx,8%);bottom:13%;font-size:clamp(70px,9.5vw,128px);line-height:1;transform:translateX(-170%);filter:drop-shadow(0 14px 10px rgba(0,0,0,.25));z-index:2}
+.slide.on .char{animation:walk 1.3s .4s var(--ease) forwards,bob 2.6s 1.7s ease-in-out infinite}
+@keyframes walk{to{transform:none}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.emo{position:absolute;left:calc(var(--cx,8%) + 12%);bottom:calc(13% + clamp(72px,9.6vw,128px));font-size:clamp(28px,3.4vw,44px);transform:scale(0);z-index:3}
+.slide.on .emo{animation:pop .6s 4.2s cubic-bezier(.3,1.8,.5,1) forwards}
+.say{position:absolute;left:calc(var(--cx,8%) + 3%);top:26%;max-width:44%;background:#fff;color:#1c1b16;font-weight:700;font-size:clamp(12px,1.25vw,16px);
+  padding:10px 14px;border-radius:16px 16px 16px 4px;box-shadow:0 10px 30px -10px rgba(0,0,0,.35);transform:scale(.4) translateY(20px);opacity:0;transform-origin:bottom left;z-index:3}
+.slide.on .say{animation:rise .6s 2.3s cubic-bezier(.3,1.5,.5,1) forwards}
+
+/* 휴대폰 화면 */
+.phone{position:absolute;right:7%;bottom:7%;width:clamp(112px,29%,210px);aspect-ratio:9/16;background:#16150F;border-radius:26px;padding:7px;z-index:4;
+  box-shadow:0 30px 60px -20px rgba(0,0,0,.55),inset 0 0 0 1.5px rgba(255,255,255,.08);transform:translateY(40%) rotate(8deg);opacity:0}
+.slide.on .phone{animation:phoneUp 1s 1.3s var(--ease) forwards}
+@keyframes phoneUp{to{transform:rotate(-3deg);opacity:1}}
+.scr{height:100%;border-radius:20px;background:#FAFAF7;color:#1c1b16;padding:22px 11px 11px;display:flex;flex-direction:column;gap:7px;font-size:clamp(9px,.92vw,12px);overflow:hidden;position:relative;line-height:1.35}
+.scr::before{content:"";position:absolute;top:7px;left:50%;width:34%;height:5px;border-radius:5px;background:#16150F;transform:translateX(-50%)}
+.ps-app{font-size:.85em;font-weight:800;color:#6b6a63}
+.ps-t{font-weight:800;font-size:1.25em}
+.ps-amt{font-weight:900;font-size:1.9em;letter-spacing:-.02em;line-height:1.1}
+.ps-amt.g{color:#1E6B45}
+.ps-sub{color:#8a877d;font-size:.9em;margin-top:-4px}
+.ps-tiny{font-size:.6em;color:#a09d93}
+.ps-otp{display:grid;grid-template-columns:repeat(6,1fr);gap:3px}
+.ps-otp i{aspect-ratio:1/1.25;border-radius:4px;background:#ECEAE3;border:1px solid #D9D6CC}
+.ps-otp i:first-child{border-color:#1E6B45;animation:blink 1s steps(1) infinite}
+.ps-box{border-radius:10px;padding:8px 9px;font-weight:700}
+.ps-box small{font-weight:600;opacity:.8}
+.ps-err{background:#FDE3DA;color:#B4391A}
+.ps-warn{background:#FCEFD3;color:#8A5A00}
+.ps-ok{background:#DCF2E3;color:#1E6B45}
+.ps-row{display:flex;justify-content:space-between;gap:6px;font-size:.9em;padding-top:6px;border-top:1px dashed #DDD9CE}
+.late{opacity:0;transform:translateY(8px)}
+.slide.on .late{animation:rise .5s forwards;animation-delay:var(--dl,3.6s)}
+.slide.on .ps-err.late{animation:rise .5s var(--dl,3.6s) forwards,shake .5s calc(var(--dl,3.6s) + .5s)}
+.ps-noti{background:#fff;border-radius:10px;padding:7px 9px;box-shadow:0 4px 12px -4px rgba(0,0,0,.2);font-weight:700;display:flex;justify-content:space-between;opacity:0;transform:translateY(-10px) scale(.95)}
+.ps-noti b{color:#1E6B45}
+.slide.on .ps-noti{animation:rise .45s forwards;animation-delay:calc(2.3s + var(--i)*.5s)}
+.ps-bars{display:flex;align-items:flex-end;gap:5px;height:54px;padding-top:4px}
+.ps-bars i{flex:1;border-radius:4px 4px 0 0;background:#9BD8B2;height:0}
+.slide.on .ps-bars i{animation:bar .8s var(--ease) forwards;animation-delay:calc(2.3s + var(--i)*.15s)}
+@keyframes bar{to{height:var(--h)}}
+.ps-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.ps-grid i{aspect-ratio:1.5;border-radius:10px;background:#E8E5DC;display:grid;place-items:center;font-style:normal;font-size:1.5em;color:#b9b5a8}
+.ps-sr{background:#16150F;color:var(--glow);border-radius:10px;padding:7px 9px;font-weight:700}
+
+/* 속마음 텍스트 */
+.sc-txt{position:relative;cursor:auto}
+.sc-idx{position:absolute;top:-34px;right:0;font-family:var(--serif);font-size:96px;font-weight:900;color:rgba(243,239,230,.05);line-height:1;pointer-events:none}
+.sc-meta{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;font-size:13px;color:rgba(243,239,230,.55);letter-spacing:.03em}
+.sc-meta b{color:#F3EFE6}
+.sc-who{font-family:var(--serif);font-weight:900;font-size:clamp(28px,3.5vw,46px);line-height:1.2;letter-spacing:-.02em;margin:14px 0 12px}
+.sc-who small{display:block;font-family:var(--sans);font-size:15px;font-weight:600;color:rgba(243,239,230,.6);letter-spacing:0;margin-bottom:6px}
+.feel{display:inline-flex;align-items:center;gap:6px;padding:6px 13px;border-radius:999px;font-size:13px;font-weight:800;color:#11100B;transform:scale(0)}
+.slide.on .feel{animation:pop .6s 4.2s cubic-bezier(.3,1.8,.5,1) forwards}
+.feel.bad{background:var(--bad)} .feel.meh{background:var(--meh)} .feel.good{background:var(--good)}
+.sc-th{font-size:clamp(17px,1.6vw,21px);line-height:1.75;margin:20px 0 24px;min-height:5.3em}
+.caret{display:inline-block;width:2px;height:1.05em;background:var(--glow);vertical-align:-3px;margin-left:2px;animation:blink .9s steps(1) infinite}
+.sc-ev-l{font-size:12px;color:rgba(243,239,230,.45);margin-bottom:8px;letter-spacing:.04em}
+.sc-ev{display:flex;flex-wrap:wrap;gap:6px}
+.sc-ev span{font-size:12.5px;padding:6px 10px;border-radius:8px;background:rgba(155,216,178,.08);border:1px solid rgba(155,216,178,.25);color:#CDEBD8;opacity:0;transform:translateY(10px)}
+.slide.on .sc-ev span{animation:rise .5s forwards;animation-delay:calc(4.6s + var(--i)*.2s)}
+
+/* 3-3. 요약 장면 */
+.sum{text-align:center;max-width:920px}
+.sum h2{font-size:clamp(32px,5.4vw,70px)}
+.faces{display:flex;justify-content:center;gap:clamp(8px,2vw,18px);margin-bottom:30px}
+.faces div{width:clamp(50px,7vw,76px);aspect-ratio:1;border-radius:50%;background:var(--pc);display:grid;place-items:center;font-size:clamp(24px,3.4vw,38px);position:relative;opacity:0;transform:translateY(20px)}
+.slide.on .faces div{animation:rise .6s var(--ease) forwards;animation-delay:calc(.2s + var(--i)*.1s)}
+.faces div::after{content:"";position:absolute;right:-2px;bottom:-2px;width:28%;aspect-ratio:1;border-radius:50%;background:var(--fc);border:3px solid #11100B}
+.sum-stats{display:flex;justify-content:center;gap:clamp(18px,5vw,56px);margin:34px 0 26px}
+.sum-stats b{display:block;font-family:var(--serif);font-size:clamp(40px,5vw,66px);line-height:1}
+.sum-stats span{font-size:14px;color:rgba(243,239,230,.6)}
+.sum p{font-size:clamp(17px,1.8vw,22px);color:rgba(243,239,230,.82)}
+.sum p b{color:var(--glow)}
+.sum .btn{margin-top:30px;background:#F3EFE6;color:#11100B}
+.sum .fade{opacity:0;transform:translateY(16px)}
+.slide.on .sum .fade{animation:rise .8s var(--ease) forwards;animation-delay:var(--dl)}
+
+@media (max-width:860px){
+  .scene{grid-template-columns:1fr;gap:16px}
+  .dio{aspect-ratio:auto;height:min(40vh,70vw)}
+  .phone{width:auto;height:82%;bottom:9%}
+  .sc-ev-l{display:none}
+  .sc-th{min-height:4.2em;margin:10px 0 14px;font-size:16px}
+  .sc-idx{display:none}
+  .slide{align-items:flex-start;padding-top:4px}
+  .sc-who{margin:8px 0}
+  .i-hint{display:none}
+}
+/* =========================================================
+   4. 본문 공통
+   ========================================================= */
+.wrap{width:min(1180px,calc(100% - 40px));margin:0 auto}
+section{position:relative;padding:130px 0}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:13px;font-weight:800;color:var(--green);letter-spacing:.06em}
+.eyebrow::before{content:"";width:22px;height:1.5px;background:currentColor}
+.h2{font-family:var(--serif);font-weight:900;font-size:clamp(32px,4.6vw,60px);line-height:1.2;letter-spacing:-.03em;margin:18px 0 20px}
+.h2 em{font-style:normal;background:linear-gradient(transparent 60%,var(--mint) 60%) no-repeat 0 0/0% 100%;transition:background-size 1.2s .4s var(--ease)}
+.in .h2 em,.h2.in em{background-size:100% 100%}
+.lead{font-size:clamp(16px,1.4vw,19px);color:var(--ink2);max-width:660px}
+.lead b{color:var(--ink)}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;background:rgba(23,22,15,.06)}
+
+/* =========================================================
+   5. 히어로
+   ========================================================= */
+.hero{min-height:100vh;padding:130px 0 70px;display:flex;flex-direction:column;justify-content:center;overflow:hidden}
+.hero .spot{position:absolute;inset:0;pointer-events:none;background:radial-gradient(520px circle at var(--mx,70%) var(--my,40%),rgba(155,216,178,.35),transparent 60%);transition:background .2s}
+.blob{position:absolute;border-radius:50%;filter:blur(60px);opacity:.55;pointer-events:none;animation:drift 18s ease-in-out infinite alternate}
+.blob.b1{width:420px;height:420px;background:var(--peach);top:-120px;left:-120px}
+.blob.b2{width:380px;height:380px;background:var(--lav);bottom:-80px;right:30%;animation-delay:-6s}
+@keyframes drift{to{transform:translate(80px,60px) scale(1.15)}}
+.hero-grid{position:relative;display:grid;grid-template-columns:1.08fr .92fr;gap:40px;align-items:center}
+.hero h1{font-family:var(--serif);font-weight:900;font-size:clamp(40px,6vw,86px);line-height:1.16;letter-spacing:-.04em;margin:22px 0 26px}
+.hero h1 .ln>span{transform:translateY(112%)}
+.play .hero h1 .ln>span{animation:up 1.1s var(--ease) forwards;animation-delay:var(--dl)}
+.hero h1 em{font-style:normal;color:var(--green);position:relative}
+.hero h1 em svg{position:absolute;left:-4%;bottom:-8%;width:108%;height:30%;overflow:visible}
+.hero h1 em path{fill:none;stroke:var(--green);stroke-width:5;stroke-linecap:round;stroke-dasharray:400;stroke-dashoffset:400}
+.play .hero h1 em path{animation:draw 1.2s 1.4s var(--ease) forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.hero .fade{opacity:0;transform:translateY(24px)}
+.play .hero .fade{animation:rise 1s var(--ease) forwards;animation-delay:var(--dl)}
+.hero-btns{display:flex;flex-wrap:wrap;gap:12px;margin-top:34px}
+
+/* 원형 광장(아고라) */
+.plaza{position:relative;aspect-ratio:1;width:min(540px,100%);margin:0 auto}
+.plaza .ring{position:absolute;border-radius:50%;border:1.5px dashed rgba(23,22,15,.18)}
+.plaza .ring.r1{inset:0;animation:spin 90s linear infinite}
+.plaza .ring.r2{inset:17%;border-style:solid;border-color:rgba(23,22,15,.08);background:radial-gradient(circle,rgba(191,232,207,.45),transparent 70%)}
+.plaza-core{position:absolute;inset:33%;border-radius:50%;background:var(--ink);color:var(--bg);display:grid;place-items:center;text-align:center;
+  box-shadow:0 30px 60px -20px rgba(23,22,15,.55);z-index:2}
+.plaza-core::before{content:"";position:absolute;inset:-12px;border-radius:50%;border:2px solid var(--green);animation:pulse 2.6s ease-out infinite}
+.plaza-core b{font-family:var(--serif);font-size:clamp(16px,2vw,22px);display:block;line-height:1.3}
+.plaza-core small{font-size:12px;opacity:.6}
+.orbit{position:absolute;inset:5%;animation:spin 70s linear infinite;z-index:3}
+.orb{position:absolute;width:clamp(58px,8vw,84px);aspect-ratio:1;transform:translate(-50%,-50%) scale(0)}
+.play .orb{animation:orbIn .8s cubic-bezier(.3,1.6,.5,1) forwards;animation-delay:var(--dl)}
+@keyframes orbIn{to{transform:translate(-50%,-50%) scale(1)}}
+.orb-in{position:relative;width:100%;height:100%;border-radius:50%;background:var(--pc);display:grid;place-items:center;font-size:clamp(28px,3.8vw,40px);
+  box-shadow:0 14px 30px -12px rgba(23,22,15,.35);border:3px solid var(--paper);animation:spin 70s linear infinite reverse}
+.orb-bub{position:absolute;bottom:108%;left:50%;transform:translateX(-50%) scale(.5);opacity:0;white-space:nowrap;background:var(--paper);padding:8px 12px;border-radius:14px;
+  font-size:13px;font-weight:700;box-shadow:0 10px 24px -10px rgba(23,22,15,.35);transition:.45s cubic-bezier(.3,1.6,.5,1);transform-origin:bottom center;pointer-events:none}
+.orb-bub::after{content:"";position:absolute;top:100%;left:50%;margin-left:-6px;border:6px solid transparent;border-top-color:var(--paper)}
+.orb.talk .orb-bub{opacity:1;transform:translateX(-50%) scale(1)}
+.orb.r .orb-bub{left:auto;right:-4px;transform:scale(.5);transform-origin:bottom right}
+.orb.l .orb-bub{left:-4px;transform:scale(.5);transform-origin:bottom left}
+.orb.r.talk .orb-bub,.orb.l.talk .orb-bub{transform:scale(1)}
+.orb.r .orb-bub::after{left:auto;right:26px}
+.orb.l .orb-bub::after{left:32px}
+
+
+/* =========================================================
+   6. 문제: 타임라인
+   ========================================================= */
+.tl-card{margin-top:30px;background:var(--paper);border:1px solid var(--line);border-radius:28px;padding:34px clamp(18px,3vw,40px) 28px;overflow-x:auto}
+.tl-card.after{background:#EEF7F1;border-color:#CFE7D8}
+.tl-label{display:flex;align-items:center;gap:10px;font-weight:800;font-size:15px;margin-bottom:28px}
+.tl-label .chip{background:var(--ink);color:var(--bg)}
+.after .tl-label .chip{background:var(--green)}
+.tl{position:relative;display:grid;grid-template-columns:repeat(5,1fr);min-width:640px;padding-top:96px}
+.tl-line{position:absolute;left:10%;right:10%;top:104px;height:2px;background:var(--line)}
+.tl-line i{display:block;height:100%;width:0;background:var(--ink);transition:width 2.2s var(--ease)}
+.after .tl-line i{background:var(--green)}
+.in .tl-line i{width:100%}
+.tl-node{position:relative;text-align:center;padding:0 6px}
+.tl-dot{width:18px;height:18px;border-radius:50%;background:var(--paper);border:2px solid var(--ink);margin:0 auto 14px;position:relative;z-index:1;transform:scale(0);transition:transform .5s cubic-bezier(.3,1.8,.5,1);transition-delay:calc(var(--i)*.4s)}
+.in .tl-dot{transform:scale(1)}
+.tl-node b{display:block;font-size:15px}
+.tl-node span{font-size:12.5px;color:var(--muted)}
+.tl-node.hot .tl-dot{background:var(--bad);border-color:var(--bad)}
+.tl-node.hot .tl-dot::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:2px solid var(--bad);animation:pulse 1.5s infinite}
+.tl-node.ag .tl-dot{background:var(--green);border-color:var(--green)}
+.tl-node.ok .tl-dot{background:var(--good);border-color:var(--good)}
+.tl-bubs{position:absolute;bottom:calc(100% + 12px);left:50%;transform:translateX(-50%);display:flex;flex-direction:column;gap:6px;align-items:center;width:max-content}
+.tl-bub{font-size:13px;font-weight:700;padding:7px 12px;border-radius:12px;background:#fff;box-shadow:0 8px 20px -10px rgba(23,22,15,.35);opacity:0;transform:translateY(12px) scale(.9);white-space:nowrap}
+.tl-bub.r{background:#FFE4DA;color:#B4391A}
+.tl-bub.g{background:var(--green);color:#fff}
+.in .tl-bub{animation:rise .5s cubic-bezier(.3,1.5,.5,1) forwards;animation-delay:calc(2s + var(--i)*.35s)}
+.tl-foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;margin-top:26px;padding-top:18px;border-top:1px dashed var(--line);font-size:14px;color:var(--ink2)}
+.tl-foot b{color:var(--ink)}
+.meter{display:inline-flex;align-items:center;gap:8px}
+.meter i{display:inline-block;width:120px;height:8px;border-radius:8px;background:rgba(23,22,15,.08);overflow:hidden;position:relative}
+.meter i::after{content:"";position:absolute;inset:0;width:0;background:var(--mc);border-radius:8px;transition:width 1.6s 2.4s var(--ease)}
+.in .meter i::after{width:var(--mv)}
+
+/* =========================================================
+   8. 작동 방식 · 공공데이터 12종
+   ========================================================= */
+.flow{display:grid;grid-template-columns:1fr 64px 1fr 64px 1fr;margin-top:56px;align-items:stretch}
+.flow-card{background:var(--paper);border:1px solid var(--line);border-radius:26px;padding:28px;display:flex;flex-direction:column}
+.flow-num{font-family:var(--serif);font-size:44px;font-weight:900;color:var(--green);line-height:1}
+.flow-card h3{font-size:20px;margin:12px 0 6px;letter-spacing:-.02em}
+.flow-card p{font-size:14px;color:var(--ink2)}
+.flow-vis{margin-top:auto;padding-top:22px;min-height:150px;position:relative}
+.flow-arrow{display:grid;place-items:center}
+.flow-arrow svg{width:100%;height:30px;overflow:visible}
+.flow-arrow path{fill:none;stroke:var(--green);stroke-width:2;stroke-dasharray:6 6;animation:dash 1s linear infinite}
+@keyframes dash{to{stroke-dashoffset:-12}}
+.layers{display:flex;flex-direction:column;gap:6px}
+.layers span{display:flex;justify-content:space-between;align-items:center;padding:9px 14px;border-radius:12px;background:var(--lc);font-size:13px;font-weight:700;
+  transform:translateX(-20px);opacity:0;transition:.6s var(--ease);transition-delay:calc(.2s + var(--i)*.12s)}
+.layers span small{font-size:11.5px;font-weight:600;color:var(--ink2)}
+.in .layers span{transform:none;opacity:1}
+.mini-people{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.mini-people i{font-style:normal;aspect-ratio:1;border-radius:50%;background:var(--pc);display:grid;place-items:center;font-size:30px;transform:scale(0);transition:transform .6s cubic-bezier(.3,1.7,.5,1);transition-delay:calc(.4s + var(--i)*.12s)}
+.in .mini-people i{transform:scale(1)}
+.mini-say{background:#fff;border:1px solid var(--line);border-radius:18px 18px 18px 4px;padding:14px 16px;font-size:14px;font-weight:600;opacity:0;transform:translateY(16px);transition:.7s .6s var(--ease)}
+.in .mini-say{opacity:1;transform:none}
+.mini-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.mini-tags span{font-size:11.5px;font-weight:700;padding:4px 9px;border-radius:7px;background:var(--green-l);color:var(--green);opacity:0;transform:scale(.8);transition:.5s cubic-bezier(.3,1.6,.5,1);transition-delay:calc(1.2s + var(--i)*.15s)}
+.in .mini-tags span{opacity:1;transform:none}
+.rag{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:22px;border-radius:24px;overflow:hidden;background:var(--ink);color:var(--bg)}
+.rag>div{padding:26px 30px}
+.rag>div+div{border-left:1px solid rgba(243,239,230,.12)}
+.rag b{display:block;font-size:18px;margin-bottom:6px}
+.rag .x b{color:#FF9D80}
+.rag .o b{color:var(--glow)}
+.rag p{font-size:14px;opacity:.75}
+
+.bento{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:40px}
+.bx{position:relative;border-radius:22px;padding:22px;background:var(--paper);border:1px solid var(--line);overflow:hidden;transition:transform .5s var(--ease),box-shadow .5s;transform-style:preserve-3d;will-change:transform}
+.bx:hover{box-shadow:0 30px 50px -30px rgba(23,22,15,.4)}
+.bx-cat{font-size:11.5px;font-weight:800;letter-spacing:.04em;color:var(--muted)}
+.bx h4{font-size:16.5px;margin:10px 0 6px;letter-spacing:-.02em;line-height:1.35}
+.bx p{font-size:13px;color:var(--ink2)}
+.bx-src{display:flex;flex-wrap:wrap;gap:5px;margin-top:14px}
+.tag{font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:6px;background:rgba(23,22,15,.06)}
+.tag.open{background:var(--green-l);color:var(--green)}
+.tag.req{background:#FCE6D9;color:#B4471F}
+.bx-ic{position:absolute;right:16px;top:14px;font-size:26px;opacity:.9;transition:transform .5s cubic-bezier(.3,1.6,.5,1)}
+.bx:hover .bx-ic{transform:scale(1.25) rotate(-10deg)}
+.bx.big{grid-column:span 2;grid-row:span 2;background:var(--ink);color:var(--bg);display:flex;flex-direction:column;justify-content:space-between;padding:32px}
+.bx.big .big-n{font-family:var(--serif);font-size:clamp(80px,10vw,140px);font-weight:900;line-height:1;color:var(--glow);margin-bottom:18px}
+.bx.big .big-n small{font-size:.38em;margin-left:6px}
+.bx.big h4{font-family:var(--serif);font-size:clamp(22px,2.4vw,30px);font-weight:900;margin:6px 0 10px}
+.bx.big p{color:rgba(243,239,230,.7);font-size:14px}
+.legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.bx.c1{background:var(--sky)} .bx.c2{background:var(--butter)} .bx.c3{background:var(--mint2)} .bx.c4{background:var(--rose)} .bx.c5{background:var(--lav)}
+
+/* =========================================================
+   9. 가상 주민 6명 (뒤집히는 카드)
+   ========================================================= */
+.people{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:50px}
+.flip{perspective:1400px;height:400px;cursor:pointer}
+.flip-in{position:relative;width:100%;height:100%;transition:transform 1s var(--ease);transform-style:preserve-3d}
+.flip:hover .flip-in,.flip.on .flip-in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;-webkit-backface-visibility:hidden;backface-visibility:hidden;border-radius:26px;padding:28px;display:flex;flex-direction:column;overflow:hidden}
+.front{background:var(--pc)}
+.front::after{content:"";position:absolute;width:260px;height:260px;border-radius:50%;background:rgba(255,255,255,.35);right:-90px;top:-90px}
+.back{background:var(--ink);color:var(--bg);transform:rotateY(180deg)}
+.pf-top{display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:800;position:relative;z-index:1}
+.pf-emoji{font-size:92px;line-height:1;margin:auto 0 16px;transition:transform .6s cubic-bezier(.3,1.6,.5,1)}
+.flip:hover .pf-emoji{transform:scale(1.1) rotate(-6deg)}
+.pf-name{font-family:var(--serif);font-size:28px;font-weight:900;letter-spacing:-.02em;line-height:1.2}
+.pf-role{font-size:14px;font-weight:600;opacity:.7}
+.pf-q{font-size:15px;font-weight:600;margin-top:12px;padding-top:12px;border-top:1px solid rgba(23,22,15,.12)}
+.back h5{font-size:12px;font-weight:800;letter-spacing:.06em;color:var(--glow);margin:14px 0 8px}
+.back h5:first-child{margin-top:0}
+.back ul{list-style:none;display:flex;flex-direction:column;gap:6px}
+.back li{font-size:13.5px;padding-left:16px;position:relative;opacity:.9}
+.back li::before{content:"";position:absolute;left:0;top:.65em;width:6px;height:6px;border-radius:50%;background:var(--glow)}
+.back .warn li::before{background:var(--bad)}
+.back .foot{margin-top:auto;font-size:11.5px;opacity:.45}
+
+/* =========================================================
+   10. 시연 (정책 조절판 + 광장)
+   ========================================================= */
+.demo{background:var(--ink);color:var(--bg);border-radius:40px;margin:0 16px;overflow:hidden}
+.demo .eyebrow{color:var(--glow)}
+.demo .lead{color:rgba(243,239,230,.7)}
+.demo .lead b{color:#fff}
+.demo .h2 em{background-image:linear-gradient(transparent 60%,rgba(155,216,178,.35) 60%)}
+.presets{display:flex;flex-wrap:wrap;gap:8px;margin-top:34px}
+.pre{background:rgba(243,239,230,.06);border:1px solid rgba(243,239,230,.18);color:var(--bg);padding:10px 16px;border-radius:999px;font-size:14px;font-weight:700;cursor:pointer;transition:.3s}
+.pre:hover{background:rgba(243,239,230,.14)}
+.pre.on{background:var(--glow);color:var(--ink);border-color:var(--glow)}
+.demo-grid{display:grid;grid-template-columns:300px 1fr 330px;gap:20px;margin-top:22px}
+.panel{background:rgba(243,239,230,.05);border:1px solid rgba(243,239,230,.12);border-radius:24px;padding:24px}
+.panel h4{font-size:13px;font-weight:800;letter-spacing:.06em;color:rgba(243,239,230,.55);margin-bottom:18px}
+.ctl{margin-bottom:22px}
+.ctl-h{display:flex;justify-content:space-between;align-items:baseline;font-size:14px;font-weight:700;margin-bottom:10px}
+.ctl-h output{font-family:var(--serif);font-size:22px;color:var(--glow)}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:6px;background:rgba(243,239,230,.15);outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--glow);border:4px solid var(--ink);box-shadow:0 0 0 2px var(--glow);transition:transform .2s}
+input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2)}
+input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--glow);border:4px solid var(--ink)}
+.seg{display:grid;grid-template-columns:1fr 1fr;background:rgba(243,239,230,.07);border-radius:12px;padding:4px;gap:4px}
+.seg button{background:none;border:0;color:rgba(243,239,230,.65);padding:9px 6px;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;transition:.3s}
+.seg button.on{background:var(--bg);color:var(--ink)}
+.tg{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;background:none;border:0;color:var(--bg);font-size:13.5px;font-weight:600;text-align:left;cursor:pointer;padding:8px 0}
+.tg i{flex:none;width:40px;height:23px;border-radius:23px;background:rgba(243,239,230,.18);position:relative;transition:background .3s}
+.tg i::after{content:"";position:absolute;top:3px;left:3px;width:17px;height:17px;border-radius:50%;background:#fff;transition:transform .3s cubic-bezier(.3,1.6,.5,1)}
+.tg.on i{background:var(--green)}
+.tg.on i::after{transform:translateX(17px)}
+.sub-note{font-size:11.5px;color:rgba(243,239,230,.4);margin-top:4px}
+
+.agora-box{display:flex;flex-direction:column;align-items:center}
+.agora{position:relative;aspect-ratio:1;width:100%;max-width:540px}
+.zone{position:absolute;border-radius:50%;left:50%;top:50%;transform:translate(-50%,-50%)}
+.zone.z3{width:92%;height:92%;background:radial-gradient(circle,transparent 60%,rgba(255,138,101,.16));border:1.5px dashed rgba(255,138,101,.4)}
+.zone.z2{width:60%;height:60%;background:rgba(246,196,83,.06);border:1.5px dashed rgba(246,196,83,.4)}
+.zone.z1{width:42%;height:42%;background:rgba(126,214,160,.12);border:1.5px solid rgba(126,214,160,.45)}
+.zl{position:absolute;top:50%;transform:translate(-50%,-50%);font-size:11px;font-weight:800;letter-spacing:.1em;white-space:nowrap}
+.zl.l1{left:65%;color:var(--good)} .zl.l2{left:75.5%;color:var(--meh)} .zl.l3{left:88%;color:var(--bad)}
+.core{position:absolute;left:50%;top:50%;width:18%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:var(--bg);color:var(--ink);display:grid;place-items:center;text-align:center;font-size:12px;font-weight:800;line-height:1.3;z-index:1}
+.core::before{content:"";position:absolute;inset:-8px;border-radius:50%;border:2px solid var(--glow);animation:pulse 2.4s infinite}
+.pp{position:absolute;width:clamp(48px,11%,64px);aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:var(--pc);display:grid;place-items:center;font-size:clamp(22px,2.6vw,30px);cursor:pointer;z-index:2;
+  border:3px solid transparent;transition:left 1.1s var(--ease),top 1.1s var(--ease),border-color .3s,box-shadow .3s;box-shadow:0 10px 20px -8px rgba(0,0,0,.5)}
+.pp.sel{border-color:#fff;box-shadow:0 0 0 6px rgba(255,255,255,.12),0 10px 20px -8px rgba(0,0,0,.5)}
+.pp.alert::before,.pp.alert::after{content:"";position:absolute;inset:-7px;border-radius:50%;border:2.5px solid var(--bad);animation:pulse 1.3s infinite}
+.pp.alert::after{animation-delay:.65s}
+.pp-tag{position:absolute;top:calc(100% + 5px);left:50%;transform:translateX(-50%);font-size:11px;font-weight:800;white-space:nowrap;padding:2px 8px;border-radius:99px;color:var(--ink)}
+.pp-tag.good{background:var(--good)} .pp-tag.meh{background:var(--meh)} .pp-tag.bad{background:var(--bad)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;width:100%;margin-top:14px}
+.stat{background:rgba(243,239,230,.05);border:1px solid rgba(243,239,230,.1);border-radius:16px;padding:12px 14px}
+.stat small{font-size:11.5px;color:rgba(243,239,230,.55);font-weight:700}
+.stat b{display:block;font-family:var(--serif);font-size:26px;line-height:1.2}
+.reach{grid-column:1/-1;display:flex;align-items:center;gap:14px}
+.reach .bar{flex:1;height:10px;border-radius:10px;background:rgba(243,239,230,.1);overflow:hidden}
+.reach .bar i{display:block;height:100%;width:0;border-radius:10px;background:linear-gradient(90deg,var(--bad),var(--meh),var(--good));background-size:300% 100%;transition:width 1s var(--ease),background-position 1s}
+
+.who{display:flex;align-items:center;gap:14px}
+.who i{font-style:normal;width:56px;height:56px;border-radius:50%;background:var(--pc);display:grid;place-items:center;font-size:30px;flex:none}
+.who b{display:block;font-size:17px}
+.who small{font-size:12.5px;color:rgba(243,239,230,.55)}
+.jr{display:flex;margin:22px 0 18px;position:relative}
+.st{flex:1;text-align:center;position:relative;font-size:11.5px;font-weight:700;color:rgba(243,239,230,.6)}
+.st::before{content:"";position:absolute;top:13px;left:-50%;width:100%;height:2px;background:rgba(243,239,230,.15);z-index:0}
+.st:first-child::before{display:none}
+.st .d{position:relative;z-index:1;width:28px;height:28px;border-radius:50%;margin:0 auto 6px;display:grid;place-items:center;font-size:13px;font-weight:900;background:#2A2922;border:2px solid rgba(243,239,230,.2);transition:.4s}
+.st.ok .d{background:var(--good);border-color:var(--good);color:var(--ink)}
+.st.ok::before{background:var(--good)}
+.st.warn .d{background:var(--meh);border-color:var(--meh);color:var(--ink)}
+.st.block .d{background:var(--bad);border-color:var(--bad);color:var(--ink);animation:shake .5s}
+.st.block{color:var(--bad)}
+.st.off{opacity:.35}
+.quote{background:var(--bg);color:var(--ink);border-radius:18px 18px 18px 4px;padding:14px 16px;font-size:14.5px;font-weight:600;min-height:72px}
+.quote.flash{animation:qflash .5s}
+@keyframes qflash{0%{transform:scale(.96);opacity:.4}100%{transform:none;opacity:1}}
+.evs{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.evs span{font-size:11.5px;padding:4px 9px;border-radius:7px;background:rgba(155,216,178,.1);border:1px solid rgba(155,216,178,.25);color:#CDEBD8}
+.iss-h{display:flex;justify-content:space-between;align-items:center;margin:22px 0 10px;font-size:13px;font-weight:800;color:rgba(243,239,230,.55);letter-spacing:.04em}
+.iss-wrap{margin-top:20px}
+.iss{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.is-n{font-style:normal;font-size:11px;font-weight:800;margin-left:4px;padding:1px 7px;border-radius:99px;background:rgba(243,239,230,.12)}
+.dot{position:absolute;width:13px;height:13px;border-radius:50%;transform:translate(-50%,-50%);background:var(--fc,var(--meh));border:2px solid var(--pc);z-index:3;cursor:pointer;
+  transition:left 1.1s var(--ease),top 1.1s var(--ease),background .4s,width .3s,height .3s;transition-delay:calc(var(--j)*45ms)}
+.dot:hover{width:17px;height:17px}
+.dot.blk{background:#11100B;border-color:var(--bad);box-shadow:0 0 0 3px rgba(255,138,101,.3)}
+.dot.on{width:18px;height:18px;box-shadow:0 0 0 3px #fff}
+.dist{display:flex;gap:3px;height:12px;margin:18px 0 8px}
+.dist i{flex:1;border-radius:4px;background:var(--fc);transition:background .4s,transform .3s}
+.dist i.on{transform:scaleY(1.5)}
+.dist-l{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:12px;color:rgba(243,239,230,.6)}
+.vars{display:flex;flex-direction:column;gap:5px;margin:14px 0 4px}
+.var{display:grid;grid-template-columns:10px 1fr auto;gap:10px;align-items:center;width:100%;padding:8px 10px;border-radius:10px;border:1px solid transparent;
+  background:rgba(243,239,230,.04);color:var(--bg);font-size:12.5px;text-align:left;cursor:pointer;transition:background .3s,border-color .3s}
+.var:hover{background:rgba(243,239,230,.09)}
+.var.on{border-color:rgba(243,239,230,.35);background:rgba(243,239,230,.09)}
+.var i{width:10px;height:10px;border-radius:50%;background:var(--fc)}
+.var em{font-style:normal;font-size:11px;font-weight:800;padding:2px 8px;border-radius:99px;background:var(--fc);color:var(--ink)}
+.is{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:12px;background:rgba(243,239,230,.05);border-left:3px solid var(--meh);font-size:13px;animation:rise .45s forwards;opacity:0;transform:translateX(10px)}
+.is.block{border-left-color:var(--bad)}
+.is b{display:block;font-size:13.5px}
+.is small{color:rgba(243,239,230,.6)}
+.is.none{border-left-color:var(--good)}
+.demo-note{margin-top:18px;font-size:12px;color:rgba(243,239,230,.4);text-align:center}
+
+/* =========================================================
+   11. "진짜 사람도 아닌데?" · 12. 로드맵 · 13. 마무리
+   ========================================================= */
+.trust-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:50px}
+.tcard{background:var(--paper);border:1px solid var(--line);border-radius:26px;padding:30px;display:flex;flex-direction:column}
+.tnum{font-family:var(--serif);font-size:15px;font-weight:900;color:var(--green)}
+.tcard h3{font-family:var(--serif);font-size:24px;font-weight:900;line-height:1.35;letter-spacing:-.02em;margin:12px 0 10px}
+.tcard>p{font-size:14.5px;color:var(--ink2)}
+.tvis{margin-top:24px;padding-top:22px;border-top:1px dashed var(--line)}
+.check li{list-style:none;display:flex;gap:10px;align-items:flex-start;font-size:14px;font-weight:600;padding:8px 0}
+.check li i{flex:none;width:20px;height:20px;border-radius:6px;border:2px solid var(--ink);position:relative;margin-top:1px;transition:background .3s;transition-delay:calc(.6s + var(--i)*.45s)}
+.check li i::after{content:"";position:absolute;left:5px;top:1px;width:5px;height:10px;border:solid #fff;border-width:0 2.5px 2.5px 0;transform:rotate(45deg) scale(0);transition:transform .35s cubic-bezier(.3,1.8,.5,1);transition-delay:calc(.7s + var(--i)*.45s)}
+.in .check li i{background:var(--green);border-color:var(--green)}
+.in .check li i::after{transform:rotate(45deg) scale(1)}
+.check small{display:block;font-weight:500;color:var(--muted);font-size:12.5px}
+.ev-demo .mini-say{background:var(--bg)}
+.bt{display:flex;flex-direction:column;gap:9px}
+.bt-row{display:grid;grid-template-columns:1fr 34px 1fr;align-items:center;gap:6px;font-size:12.5px;font-weight:700}
+.bt-row span{padding:7px 9px;border-radius:9px;background:var(--bg);opacity:0;transform:translateY(8px);transition:.5s var(--ease);transition-delay:calc(.3s + var(--i)*.25s)}
+.bt-row span.p{background:#EDF8F1}
+.bt-row span.miss{background:#FFE9E1;color:#B4391A}
+.bt-row em{font-style:normal;text-align:center;height:2px;background:var(--green);transform:scaleX(0);transition:transform .5s;transition-delay:calc(.6s + var(--i)*.25s);position:relative}
+.bt-row em.x{background:transparent;height:auto;transform:scale(0);color:#B4391A;font-weight:900}
+.in .bt-row span{opacity:1;transform:none}
+.in .bt-row em{transform:scaleX(1)}
+.in .bt-row em.x{transform:scale(1)}
+.bt-h{display:grid;grid-template-columns:1fr 34px 1fr;gap:6px;font-size:11px;font-weight:800;color:var(--muted);margin-bottom:2px}
+.bt-score{display:flex;align-items:baseline;justify-content:space-between;margin-top:14px}
+.bt-score b{font-family:var(--serif);font-size:40px;color:var(--green);line-height:1}
+.bt-score small{font-size:11.5px;color:var(--muted)}
+
+.loop{grid-column:1/-1;background:var(--ink);color:var(--bg);border-radius:26px;padding:34px clamp(20px,3vw,40px);display:grid;grid-template-columns:.9fr 1.1fr;gap:30px;align-items:center}
+.loop h3{font-family:var(--serif);font-size:clamp(24px,2.6vw,32px);font-weight:900;line-height:1.35;letter-spacing:-.02em;margin:10px 0}
+.loop p{color:rgba(243,239,230,.7);font-size:14.5px}
+.loop .tnum{color:var(--glow)}
+.cycle{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;position:relative}
+.cy{position:relative;background:rgba(243,239,230,.06);border:1px solid rgba(243,239,230,.12);border-radius:18px;padding:18px 14px;text-align:center;transition:background .4s,border-color .4s,transform .4s}
+.cy i{font-style:normal;font-size:28px;display:block}
+.cy b{display:block;font-size:14px;margin-top:8px}
+.cy small{font-size:11.5px;color:rgba(243,239,230,.55)}
+.cy.on{background:rgba(155,216,178,.16);border-color:var(--glow);transform:translateY(-6px)}
+.cy:nth-child(-n+3)::after{content:"→";position:absolute;right:-12px;top:50%;transform:translateY(-50%);color:var(--glow);font-weight:900;z-index:1}
+.cycle-back{grid-column:1/-1;text-align:center;font-size:12.5px;color:var(--glow);padding-top:6px}
+
+/* 확장 가능성 */
+.scale-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:48px;align-items:center;margin-top:56px}
+.ripple{position:relative;aspect-ratio:1;width:min(460px,100%);margin:0 auto}
+.rp{position:absolute;left:50%;top:50%;border-radius:50%;border:1.5px solid var(--green);transform:translate(-50%,-50%) scale(.4);opacity:0;transition:transform 1.1s var(--ease),opacity 1.1s;transition-delay:var(--dl)}
+.in .rp{transform:translate(-50%,-50%);opacity:1}
+.rp span{position:absolute;top:0;left:50%;transform:translate(-50%,-50%);background:var(--bg);border:1.5px solid var(--green);color:var(--green);padding:3px 12px;border-radius:99px;font-size:13px;font-weight:800;white-space:nowrap}
+.rp.r1{width:34%;height:34%;background:var(--green);--dl:.1s}
+.rp.r1 span{background:var(--green);color:#fff}
+.rp.r2{width:56%;height:56%;background:rgba(191,232,207,.55);--dl:.35s}
+.rp.r3{width:78%;height:78%;background:rgba(191,232,207,.3);border-style:dashed;--dl:.6s}
+.rp.r4{width:98%;height:98%;background:rgba(191,232,207,.14);border-style:dashed;--dl:.85s}
+.rp-core{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:34px;z-index:1}
+.ripple::after{content:"";position:absolute;left:50%;top:50%;width:34%;height:34%;border-radius:50%;border:2px solid var(--green);transform:translate(-50%,-50%);animation:ripple 3.4s ease-out infinite}
+@keyframes ripple{to{width:98%;height:98%;opacity:0}}
+.axes{display:flex;flex-direction:column;gap:14px}
+.axis{background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:22px 24px}
+.axis .an{font-family:var(--serif);font-weight:900;color:var(--green);font-size:14px}
+.axis h4{font-size:18px;margin:6px 0;letter-spacing:-.02em}
+.axis p{font-size:14px;color:var(--ink2)}
+.fchips{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:12px}
+.fchips span{font-size:12.5px;font-weight:700;padding:5px 11px;border-radius:99px;background:rgba(23,22,15,.06)}
+.fchips span.now{background:var(--green);color:#fff}
+.fchips b{color:var(--green)}
+.sub-h{font-family:var(--serif);font-weight:900;font-size:clamp(22px,2.4vw,30px);letter-spacing:-.02em;margin:80px 0 20px}
+.uses{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.use{position:relative;border-radius:22px;padding:24px;background:var(--paper);border:1px solid var(--line);overflow:hidden;will-change:transform}
+.use i{font-style:normal;font-size:30px;display:block;margin-bottom:12px;transition:transform .5s cubic-bezier(.3,1.6,.5,1)}
+.use:hover i{transform:scale(1.2) rotate(-8deg)}
+.use h4{font-size:17px;margin-bottom:6px;letter-spacing:-.02em}
+.use p{font-size:13.5px;color:var(--ink2)}
+.use-tag{display:inline-block;margin-top:12px;font-size:11.5px;font-weight:800;padding:3px 9px;border-radius:7px;background:var(--green-l);color:var(--green)}
+.use.hl{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.use.hl p{color:rgba(243,239,230,.7)}
+.use.hl .use-tag{background:var(--glow);color:var(--ink)}
+
+.road{position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:60px}
+.road-line{position:absolute;left:0;right:0;top:11px;height:2px;background:var(--line)}
+.road-line i{display:block;height:100%;width:0;background:var(--green);transition:width 2.4s var(--ease)}
+.in .road-line i{width:100%}
+.rs{position:relative;padding-top:44px}
+.rs .dot{position:absolute;top:0;left:0;width:24px;height:24px;border-radius:50%;background:var(--bg);border:2px solid var(--green);transform:scale(0);transition:transform .5s cubic-bezier(.3,1.8,.5,1);transition-delay:calc(var(--i)*.55s)}
+.rs .dot::after{content:"";position:absolute;inset:5px;border-radius:50%;background:var(--green)}
+.in .rs .dot{transform:scale(1)}
+.rs-card{background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:24px;height:100%;transition:transform .5s var(--ease),box-shadow .5s}
+.rs-card:hover{transform:translateY(-6px);box-shadow:0 26px 40px -26px rgba(23,22,15,.4)}
+.rs .when{font-size:12.5px;font-weight:800;color:var(--green)}
+.rs h4{font-family:var(--serif);font-size:21px;font-weight:900;margin:6px 0 12px;letter-spacing:-.02em}
+.rs ul{list-style:none;display:flex;flex-direction:column;gap:7px}
+.rs li{font-size:13.5px;color:var(--ink2);padding-left:14px;position:relative}
+.rs li::before{content:"·";position:absolute;left:2px;font-weight:900;color:var(--green)}
+.rs .out{margin-top:14px;font-size:12.5px;font-weight:700;padding:8px 10px;border-radius:10px;background:var(--green-l);color:var(--green)}
+.maker{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:16px;margin-top:40px;padding:22px 26px;border-radius:20px;border:1px solid var(--line);background:var(--paper)}
+.maker b{font-size:16px}
+.maker small{display:block;color:var(--muted);font-size:13px}
+
+.cta{padding:170px 0 150px;text-align:center;overflow:hidden}
+.cta .blob.b1{top:10%;left:10%;background:var(--mint)}
+.cta .blob.b2{bottom:0;right:10%;background:var(--peach)}
+.cta h2{position:relative;font-family:var(--serif);font-weight:900;font-size:clamp(40px,7vw,104px);line-height:1.12;letter-spacing:-.04em}
+.cta h2 em{font-style:normal;color:var(--green)}
+.cta p{position:relative;margin:24px auto 0;color:var(--ink2);font-size:17px;max-width:560px}
+.cta .hero-btns{justify-content:center;position:relative}
+footer{border-top:1px solid var(--line);padding:34px 0 44px;font-size:12.5px;color:var(--muted)}
+footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px}
+footer p{max-width:720px}
+
+/* =========================================================
+   14. 화면 크기별 조정 (태블릿·휴대폰)
+   ========================================================= */
+@media (max-width:1100px){
+  .demo-grid{grid-template-columns:1fr 1fr}
+  .demo-grid .agora-box{grid-column:1/-1;order:-1}
+  .bento{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:900px){
+  section{padding:96px 0}
+  .hero-grid{grid-template-columns:1fr}
+  .hero-vis{order:-1;max-width:420px;margin:0 auto;width:100%}
+  .flow{grid-template-columns:1fr}
+  .flow-arrow{height:44px}
+  .flow-arrow svg{transform:rotate(90deg);width:44px}
+  .rag{grid-template-columns:1fr}
+  .rag>div+div{border-left:0;border-top:1px solid rgba(243,239,230,.12)}
+  .people,.trust-grid{grid-template-columns:1fr 1fr}
+  .loop{grid-template-columns:1fr}
+  .road{grid-template-columns:1fr 1fr}
+  .road-line{display:none}
+  .scale-grid{grid-template-columns:1fr}
+  .uses,.iss{grid-template-columns:1fr 1fr}
+}
+@media (max-width:640px){
+  .people,.trust-grid,.road,.demo-grid{grid-template-columns:1fr}
+  .bento{grid-template-columns:1fr}
+  .bx.big{grid-column:auto;grid-row:auto}
+  .cycle{grid-template-columns:1fr 1fr}
+  .cy:nth-child(2)::after{display:none}
+  .stats{grid-template-columns:1fr 1fr}
+  .demo{margin:0 8px;border-radius:28px}
+  .pp{width:40px;font-size:20px;border-width:2px}
+  .pp-tag{font-size:9.5px;padding:1px 6px}
+  .zl{display:none}
+  .uses,.iss{grid-template-columns:1fr}
+  .dot{width:10px;height:10px}
+  .tl-card{overflow:visible}
+  .tl{display:flex;flex-direction:column;gap:16px;min-width:0;padding:0}
+  .tl-line{left:8px;right:auto;top:10px;bottom:10px;width:2px;height:auto}
+  .tl-line i{width:100%;height:0;transition:height 2.2s var(--ease)}
+  .in .tl-line i{height:100%}
+  .tl-node{display:grid;grid-template-columns:18px 1fr;column-gap:14px;text-align:left;padding:0}
+  .tl-dot{grid-row:1/3;margin:3px 0 0}
+  .tl-node b,.tl-node span{grid-column:2}
+  .tl-bubs{position:static;transform:none;grid-column:2;align-items:flex-start;width:auto;margin-top:8px}
+  .tl-bub{white-space:normal}
+}
+</style>
+</head>
+<body class="lock">
+<!-- ============ 인트로 (내용은 아래 스크립트가 자동으로 채웁니다) ============ -->
+<div class="intro" id="intro" role="dialog" aria-label="인트로: 같은 정책, 여섯 개의 하루">
+  <div class="i-bars" id="iBars"></div>
+  <div class="i-top">
+    <a class="logo" style="color:#F3EFE6">
+      <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true"><circle cx="16" cy="16" r="16" fill="#F3EFE6"/><circle cx="16" cy="16" r="9" fill="none" stroke="#17160F" stroke-opacity=".3" stroke-dasharray="2 2"/><circle cx="16" cy="7" r="2.2" fill="#E4572E"/><circle cx="23.8" cy="11.5" r="2.2" fill="#1E6B45"/><circle cx="23.8" cy="20.5" r="2.2" fill="#E9A23B"/><circle cx="16" cy="25" r="2.2" fill="#6C5CE7"/><circle cx="8.2" cy="20.5" r="2.2" fill="#2E86DE"/><circle cx="8.2" cy="11.5" r="2.2" fill="#D6336C"/><circle cx="16" cy="16" r="3" fill="#17160F"/></svg>
+      아고라 서구<small>인트로</small>
+    </a>
+    <div class="i-btns">
+      <button class="i-btn" id="iPause">일시정지</button>
+      <button class="i-btn" id="iSkip">건너뛰기 ↓</button>
+    </div>
+  </div>
+  <div class="i-stage" id="iStage"></div>
+  <div class="i-hint">화면 오른쪽 누르면 다음 · 왼쪽 누르면 이전 · Space 일시정지</div>
+</div>
+
+<div class="progress" id="progress"></div>
+
+<!-- ============ 메뉴바 ============ -->
+<nav class="nav" id="nav">
+  <a class="logo" href="#top">
+    <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true"><circle cx="16" cy="16" r="16" fill="#17160F"/><circle cx="16" cy="16" r="9" fill="none" stroke="#F3EFE6" stroke-opacity=".35" stroke-dasharray="2 2"/><circle cx="16" cy="7" r="2.2" fill="#FF8A65"/><circle cx="23.8" cy="11.5" r="2.2" fill="#9BD8B2"/><circle cx="23.8" cy="20.5" r="2.2" fill="#F6C453"/><circle cx="16" cy="25" r="2.2" fill="#DCD5F6"/><circle cx="8.2" cy="20.5" r="2.2" fill="#CFE3F4"/><circle cx="8.2" cy="11.5" r="2.2" fill="#F5CFD8"/><circle cx="16" cy="16" r="3" fill="#9BD8B2"/></svg>
+    아고라 서구
+  </a>
+  <div class="nav-links">
+    <a href="#problem">문제</a><a href="#how">작동 방식</a><a href="#people">가상 주민</a><a href="#demo">시연</a><a href="#trust">신뢰</a><a href="#scale">확장</a><a href="#plan">계획</a>
+  </div>
+  <button class="nav-cta" data-replay>▶ 인트로 다시 보기</button>
+</nav>
+
+<!-- ============ 히어로 ============ -->
+<header class="hero" id="top">
+  <div class="spot"></div>
+  <div class="blob b1"></div><div class="blob b2"></div>
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow fade" style="--dl:.2s">대전 서구 · 정책 사전 시뮬레이션 AI</span>
+      <h1>
+        <span class="ln"><span style="--dl:.35s">정책이 시행되기</span></span>
+        <span class="ln"><span style="--dl:.5s"><em>전에<svg viewBox="0 0 100 20" preserveAspectRatio="none"><path d="M2 14 Q 30 4 55 11 T 98 8"/></svg></em>, 주민이</span></span>
+        <span class="ln"><span style="--dl:.65s">먼저 말합니다.</span></span>
+      </h1>
+      <p class="lead fade" style="--dl:1s">
+        <b>아고라 서구</b>는 서구 통계연보와 각종 공공데이터로 만든 <b>가상 주민 6명</b>에게
+        정책안을 먼저 보여주는 AI입니다. 설명회에서야 듣던 반대 이유, 신청 장벽, 사각지대를
+        <b>기획 단계에서</b> 미리 확인합니다.
+      </p>
+      <div class="hero-btns fade" style="--dl:1.15s">
+        <a class="btn btn-dark mag" href="#demo">시연 해보기 <span class="arr">→</span></a>
+        <button class="btn btn-line mag" data-replay>▶ 인트로 다시 보기</button>
+      </div>
+    </div>
+    <div class="hero-vis">
+      <div class="plaza" id="plaza">
+        <div class="ring r1"></div><div class="ring r2"></div>
+        <div class="plaza-core"><div><small>AGORA SEO-GU</small><b>정책안<br>광장</b></div></div>
+        <div class="orbit">
+          <div class="orb" style="left:50%;top:6%;--pc:var(--peach);--dl:.9s"><div class="orb-in">👵<span class="orb-bub">카드 한 장이면 됐는데…</span></div></div>
+          <div class="orb" style="left:88%;top:28%;--pc:var(--sky);--dl:1s"><div class="orb-in">👩‍💼<span class="orb-bub">퇴근하면 가게가 닫혀요</span></div></div>
+          <div class="orb" style="left:88%;top:72%;--pc:var(--butter);--dl:1.1s"><div class="orb-in">🧑‍🍳<span class="orb-bub">골목에 손님 오면 좋죠!</span></div></div>
+          <div class="orb" style="left:50%;top:94%;--pc:var(--lav);--dl:1.2s"><div class="orb-in">💑<span class="orb-bub">가계부 연동 최고예요</span></div></div>
+          <div class="orb" style="left:12%;top:72%;--pc:var(--mint2);--dl:1.3s"><div class="orb-in">🧑‍🎓<span class="orb-bub">편의점은 왜 빠져요?</span></div></div>
+          <div class="orb" style="left:12%;top:28%;--pc:var(--rose);--dl:1.4s"><div class="orb-in">👨‍🦯<span class="orb-bub">화면낭독이 안 돼요</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ============ 01 문제 ============ -->
+<section id="problem">
+  <div class="wrap">
+    <span class="eyebrow" data-reveal>01 · 문제</span>
+    <h2 class="h2" data-reveal style="--dl:.1s">주민 의견은 늘,<br><em>너무 늦게</em> 도착합니다</h2>
+    <p class="lead" data-reveal style="--dl:.2s">지금의 주민 의견수렴은 정책을 다 만든 뒤 <b>설명회</b>에서 이뤄집니다. 그때 듣는 "이건 나한테 해당 안 되는데"는 이미 예산과 결재가 끝난 뒤라 반영하기 어렵습니다.</p>
+
+    <div class="tl-card" data-reveal>
+      <div class="tl-label"><span class="chip">지금</span> 설명회에서 처음 듣는 반응</div>
+      <div class="tl">
+        <div class="tl-line"><i></i></div>
+        <div class="tl-node" style="--i:0"><div class="tl-dot"></div><b>문제 인식</b><span>현안·민원 파악</span></div>
+        <div class="tl-node" style="--i:1"><div class="tl-dot"></div><b>정책 설계</b><span>부서 내부 검토</span></div>
+        <div class="tl-node" style="--i:2"><div class="tl-dot"></div><b>예산·결재</b><span>재원 확보</span></div>
+        <div class="tl-node" style="--i:3"><div class="tl-dot"></div><b>정책 확정</b><span>시행 계획 수립</span></div>
+        <div class="tl-node hot" style="--i:4"><div class="tl-dot"></div><b>주민설명회</b><span>첫 의견수렴</span>
+          <div class="tl-bubs">
+            <div class="tl-bub r" style="--i:0">"이건 나한테 해당 안 되는데요"</div>
+            <div class="tl-bub r" style="--i:1">"앱은 못 써요"</div>
+            <div class="tl-bub r" style="--i:2">"왜 미리 안 물어봤어요?"</div>
+          </div>
+        </div>
+      </div>
+      <div class="tl-foot"><span>의견이 도착한 시점: <b>예산·결재가 모두 끝난 뒤</b></span><span class="meter">수정 여지 <i style="--mv:15%;--mc:var(--bad)"></i> 낮음</span></div>
+    </div>
+
+    <div class="tl-card after" data-reveal>
+      <div class="tl-label"><span class="chip">아고라 서구 도입 후</span> 설계 단계에서 먼저 듣는 반응</div>
+      <div class="tl">
+        <div class="tl-line"><i></i></div>
+        <div class="tl-node" style="--i:0"><div class="tl-dot"></div><b>문제 인식</b><span>현안·민원 파악</span></div>
+        <div class="tl-node ag" style="--i:1"><div class="tl-dot"></div><b>정책 설계</b><span>+ 가상 주민 6명 검토</span>
+          <div class="tl-bubs">
+            <div class="tl-bub g" style="--i:0">🏛 아고라 서구 투입</div>
+            <div class="tl-bub r" style="--i:1">사각지대 2건 발견</div>
+          </div>
+        </div>
+        <div class="tl-node" style="--i:2"><div class="tl-dot"></div><b>예산·결재</b><span>보완책까지 반영</span></div>
+        <div class="tl-node" style="--i:3"><div class="tl-dot"></div><b>정책 확정</b><span>시행 계획 수립</span></div>
+        <div class="tl-node ok" style="--i:4"><div class="tl-dot"></div><b>주민설명회</b><span>실제 주민 확인</span>
+          <div class="tl-bubs"><div class="tl-bub g" style="--i:2">예상 쟁점, 답변 준비 완료 ✓</div></div>
+        </div>
+      </div>
+      <div class="tl-foot"><span>의견이 도착한 시점: <b>아직 무엇이든 고칠 수 있을 때</b></span><span class="meter">수정 여지 <i style="--mv:88%;--mc:var(--green)"></i> 높음</span></div>
+    </div>
+  </div>
+</section>
+<!-- ============ 02 작동 방식 ============ -->
+<section id="how">
+  <div class="wrap">
+    <span class="eyebrow" data-reveal>02 · 작동 방식</span>
+    <h2 class="h2" data-reveal style="--dl:.1s">공공데이터로 사람을 만들고,<br><em>근거를 붙여</em> 말하게 합니다</h2>
+    <p class="lead" data-reveal style="--dl:.2s">가상 주민은 상상으로 만든 캐릭터가 아닙니다. 공개된 통계와 조사, 실제 민원 기록을 겹쳐 <b>"서구에 실제로 있을 법한 한 사람"</b>을 구성하고, 모든 발언에 출처를 남깁니다.</p>
+
+    <div class="flow">
+      <div class="flow-card" data-reveal style="--dl:.1s">
+        <div class="flow-num">①</div><h3>공공데이터 자료집</h3><p>인구·가구·생활 인식·민원·상권 데이터 12종을 한곳에 정리합니다.</p>
+        <div class="flow-vis"><div class="layers">
+          <span style="--i:0;--lc:var(--sky)">누가 사는가<small>3종</small></span>
+          <span style="--i:1;--lc:var(--butter)">어떤 형편인가<small>3종</small></span>
+          <span style="--i:2;--lc:var(--mint2)">어떻게 느끼는가<small>2종</small></span>
+          <span style="--i:3;--lc:var(--rose)">어떻게 말했나<small>2종</small></span>
+          <span style="--i:4;--lc:var(--lav)">어디서 쓰는가<small>2종</small></span>
+        </div></div>
+      </div>
+      <div class="flow-arrow"><svg viewBox="0 0 64 30"><path d="M4 15 H58"/><path d="M50 8 L58 15 L50 22"/></svg></div>
+      <div class="flow-card" data-reveal style="--dl:.25s">
+        <div class="flow-num">②</div><h3>가상 주민 6명 구성</h3><p>동·연령·가구 형태·소득·디지털 역량을 조합해 통계 속 "평균적인 한 사람"을 인물로 만듭니다.</p>
+        <div class="flow-vis"><div class="mini-people">
+          <i style="--i:0;--pc:var(--peach)">👵</i><i style="--i:1;--pc:var(--sky)">👩‍💼</i><i style="--i:2;--pc:var(--butter)">🧑‍🍳</i>
+          <i style="--i:3;--pc:var(--lav)">💑</i><i style="--i:4;--pc:var(--mint2)">🧑‍🎓</i><i style="--i:5;--pc:var(--rose)">👨‍🦯</i>
+        </div></div>
+      </div>
+      <div class="flow-arrow"><svg viewBox="0 0 64 30"><path d="M4 15 H58"/><path d="M50 8 L58 15 L50 22"/></svg></div>
+      <div class="flow-card" data-reveal style="--dl:.4s">
+        <div class="flow-num">③</div><h3>반응 + 근거 태그</h3><p>정책안을 넣으면 6명이 각자 입장에서 반응하고, 발언마다 근거 데이터가 붙습니다.</p>
+        <div class="flow-vis">
+          <div class="mini-say">👵 "앱으로만 충전하라고요? 인증번호 치다가 시간이 다 가요."</div>
+          <div class="mini-tags"><span style="--i:0">📎 디지털정보격차 실태조사</span><span style="--i:1">📎 서구 통계연보</span><span style="--i:2">📎 국민신문고 민원</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rag" data-reveal>
+      <div class="x"><b>✕ AI를 새로 훈련시키지 않습니다</b><p>AI 모델을 다시 학습시키는 방식은 비용과 데이터 부담이 크고 개인정보 문제가 생깁니다.</p></div>
+      <div class="o"><b>✓ 자료집을 먼저 찾아보고, 근거를 붙여 말하게 합니다</b><p>전문 용어로 <b style="display:inline;font-size:inherit">RAG(검색 증강 생성)</b>라고 합니다. 모든 발언에 출처가 남아 담당자가 직접 확인할 수 있습니다.</p></div>
+    </div>
+
+    <div class="bento">
+      <div class="bx big" data-reveal="scale">
+        <div><span class="bx-cat" style="color:var(--glow)">PUBLIC DATA</span><div class="big-n"><span data-count="12">0</span><small>종</small></div></div>
+        <div><h4>가상 주민의 말을 받치는 공공데이터</h4><p>누가 사는지, 어떤 형편인지, 어떻게 느끼는지, 실제로 어떻게 말했는지, 어디서 쓰는지를 다섯 겹으로 쌓습니다.</p>
+          <div class="legend"><span class="tag open">공개 데이터</span><span class="tag req">기관 협조 필요</span></div></div>
+      </div>
+      <div class="bx c1 tilt" data-reveal style="--dl:.05s"><span class="bx-ic">🏙️</span><span class="bx-cat">누가 사는가</span><h4>대전 서구 통계연보</h4><p>동별 인구·가구·연령 구조</p><div class="bx-src"><span class="tag">서구청</span><span class="tag open">공개</span></div></div>
+      <div class="bx c1 tilt" data-reveal style="--dl:.1s"><span class="bx-ic">🪪</span><span class="bx-cat">누가 사는가</span><h4>주민등록 인구통계</h4><p>동·연령별 인구와 전입·전출</p><div class="bx-src"><span class="tag">행정안전부</span><span class="tag open">공개</span></div></div>
+      <div class="bx c1 tilt" data-reveal style="--dl:.15s"><span class="bx-ic">🏠</span><span class="bx-cat">누가 사는가</span><h4>인구주택총조사</h4><p>1인가구·가구원 수·주거 형태</p><div class="bx-src"><span class="tag">통계청 KOSIS</span><span class="tag open">공개</span></div></div>
+      <div class="bx c2 tilt" data-reveal style="--dl:.2s"><span class="bx-ic">♿</span><span class="bx-cat">어떤 형편인가</span><h4>등록장애인 현황</h4><p>장애 유형·정도별 분포</p><div class="bx-src"><span class="tag">보건복지부</span><span class="tag open">공개</span></div></div>
+      <div class="bx c2 tilt" data-reveal style="--dl:.05s"><span class="bx-ic">💍</span><span class="bx-cat">어떤 형편인가</span><h4>신혼부부통계</h4><p>혼인 연차별 소득·주택·자녀</p><div class="bx-src"><span class="tag">통계청</span><span class="tag open">공개</span></div></div>
+      <div class="bx c2 tilt" data-reveal style="--dl:.1s"><span class="bx-ic">🎓</span><span class="bx-cat">어떤 형편인가</span><h4>청년층 부가조사</h4><p>취업 준비 기간과 활동 상태</p><div class="bx-src"><span class="tag">통계청 경제활동인구조사</span><span class="tag open">공개</span></div></div>
+      <div class="bx c3 tilt" data-reveal style="--dl:.15s"><span class="bx-ic">📋</span><span class="bx-cat">어떻게 느끼는가</span><h4>대전광역시 사회조사</h4><p>연령·성별·직업별 생활 인식</p><div class="bx-src"><span class="tag">대전시 · KOSIS</span><span class="tag open">공개</span></div></div>
+      <div class="bx c3 tilt" data-reveal style="--dl:.2s"><span class="bx-ic">📱</span><span class="bx-cat">어떻게 느끼는가</span><h4>디지털정보격차 실태조사</h4><p>고령층·장애인의 디지털 활용 수준</p><div class="bx-src"><span class="tag">과기정통부 · NIA</span><span class="tag open">공개</span></div></div>
+      <div class="bx c4 tilt" data-reveal style="--dl:.05s"><span class="bx-ic">📨</span><span class="bx-cat">어떻게 말했나</span><h4>국민신문고 민원 데이터</h4><p>비슷한 정책에 실제로 나온 불만의 표현</p><div class="bx-src"><span class="tag">국민권익위원회</span><span class="tag open">공개 · 비식별</span></div></div>
+      <div class="bx c4 tilt" data-reveal style="--dl:.1s"><span class="bx-ic">🗂️</span><span class="bx-cat">어떻게 말했나</span><h4>주민설명회·공청회 기록</h4><p>과거 정책에 대한 현장 반응</p><div class="bx-src"><span class="tag">서구청 내부</span><span class="tag req">협조 필요</span></div></div>
+      <div class="bx c5 tilt" data-reveal style="--dl:.15s"><span class="bx-ic">🏪</span><span class="bx-cat">어디서 쓰는가</span><h4>상가(상권)정보</h4><p>동별 업종·프랜차이즈 분포</p><div class="bx-src"><span class="tag">소상공인시장진흥공단</span><span class="tag open">공개</span></div></div>
+      <div class="bx c5 tilt" data-reveal style="--dl:.2s"><span class="bx-ic">💳</span><span class="bx-cat">어디서 쓰는가</span><h4>지역사랑상품권 이용 현황</h4><p>발행·결제 규모와 업종별 사용</p><div class="bx-src"><span class="tag">행정안전부 · 대전시</span><span class="tag req">일부 협조</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 04 가상 주민 ============ -->
+<section id="people" style="padding-top:40px">
+  <div class="wrap">
+    <span class="eyebrow" data-reveal>03 · 가상 주민</span>
+    <h2 class="h2" data-reveal style="--dl:.1s">통계가 만든<br><em>여섯 명의 이웃</em></h2>
+    <p class="lead" data-reveal style="--dl:.2s">실존 인물이 아닙니다. 서구의 통계를 조합해 만든 <b>"가장 그럴듯한 한 사람"</b>입니다. 카드에 마우스를 올리거나 누르면 이 사람을 만든 데이터가 보입니다.</p>
+    <div class="people" id="peopleGrid"></div>
+  </div>
+</section>
+<!-- ============ 05 시연 ============ -->
+<section id="demo" class="demo">
+  <div class="wrap">
+    <span class="eyebrow" data-reveal>04 · 시연</span>
+    <h2 class="h2" data-reveal style="--dl:.1s">지역화폐 개편안을<br><em>광장에 올려봅니다</em></h2>
+    <p class="lead" data-reveal style="--dl:.2s"><b>6개 집단, 조건이 다른 36명</b>이 반응합니다. 같은 70대라도 스마트폰을 쓰는지, 가족이 가까이 사는지에 따라 결과가 갈립니다. <b>점 하나가 주민 한 명</b>이고, 큰 얼굴은 그 집단의 평균 위치입니다. 찬성하면 중심으로, 반대하면 가장자리로 움직입니다.</p>
+
+    <div class="presets" data-reveal style="--dl:.3s">
+      <button class="pre on" data-pre="now">현행 유지</button>
+      <button class="pre" data-pre="intro">인트로의 개편안</button>
+      <button class="pre" data-pre="fix">보완한 개편안</button>
+    </div>
+
+    <div class="demo-grid" data-reveal style="--dl:.35s">
+      <div class="panel">
+        <h4>① 정책 조절판</h4>
+        <div class="ctl"><div class="ctl-h">캐시백률 <output id="cbV">10%</output></div><input type="range" id="cb" min="5" max="15" step="1" value="10" aria-label="캐시백률"></div>
+        <div class="ctl"><div class="ctl-h">월 충전 한도 <output id="limV">50만</output></div><input type="range" id="lim" min="20" max="70" step="10" value="50" aria-label="월 충전 한도"></div>
+        <div class="ctl"><div class="ctl-h">카드 방식</div><div class="seg" data-k="app"><button data-v="0" class="on">실물카드 + 앱</button><button data-v="1">앱 전용</button></div></div>
+        <div class="ctl"><div class="ctl-h">캐시백 사용처</div><div class="seg" data-k="alley"><button data-v="0" class="on">전체 가맹점</button><button data-v="1">골목상권만</button></div></div>
+        <div class="ctl" style="margin-bottom:0"><div class="ctl-h">보완책</div>
+          <button class="tg" data-k="assist">주민센터 대리 충전 창구<i></i></button>
+          <button class="tg" data-k="a11y">앱 화면낭독 접근성 인증<i></i></button>
+          <p class="sub-note">보완책은 '앱 전용'일 때 효과가 나타납니다</p>
+        </div>
+      </div>
+
+      <div class="agora-box">
+        <div class="agora" id="agora">
+          <div class="zone z3"></div><div class="zone z2"></div><div class="zone z1"></div>
+          <span class="zl l3">반대</span><span class="zl l2">보류</span><span class="zl l1">찬성</span>
+          <div class="core">🏛️<br>정책안</div>
+        </div>
+        <div class="stats">
+          <div class="stat"><small>😊 찬성</small><b id="sY">0</b></div>
+          <div class="stat"><small>😕 보류</small><b id="sM">0</b></div>
+          <div class="stat"><small>😣 반대</small><b id="sN">0</b></div>
+          <div class="stat"><small>🚨 신청 불가</small><b id="sB">0</b></div>
+          <div class="stat reach"><small>정책 도달률</small><div class="bar"><i id="reachBar"></i></div><b id="reachV" style="font-size:20px">100%</b></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h4>② 선택한 집단 — 같은 집단, 다른 사정</h4>
+        <div class="who" id="dWho"></div>
+        <div class="dist" id="dDist"></div>
+        <div class="dist-l" id="dDistL"></div>
+        <div class="vars" id="dVars"></div>
+        <div class="jr" id="dJr"></div>
+        <div class="quote" id="dQ"></div>
+        <div class="evs" id="dEv"></div>
+      </div>
+    </div>
+    <div class="iss-wrap">
+      <div class="iss-h">③ 시행 전에 발견한 쟁점 <span id="issN">0건</span></div>
+      <div class="iss" id="dIss"></div>
+    </div>
+    <p class="demo-note">※ 시연 화면은 설명을 위해 미리 정한 규칙으로 움직이는 예시입니다. 실제 서비스에서는 AI가 공공데이터 자료집을 근거로 반응을 생성합니다.</p>
+  </div>
+</section>
+
+<!-- ============ 06 신뢰 ============ -->
+<section id="trust">
+  <div class="wrap">
+    <span class="eyebrow" data-reveal>05 · 신뢰</span>
+    <h2 class="h2" data-reveal style="--dl:.1s">진짜 사람도 아닌데,<br><em>의미가 있을까요?</em></h2>
+    <p class="lead" data-reveal style="--dl:.2s">가장 먼저 나올 질문입니다. 역할을 분명히 하고, 이미 끝난 정책으로 먼저 검증합니다.</p>
+    <div class="trust-grid">
+      <div class="tcard" data-reveal style="--dl:.05s">
+        <span class="tnum">01 · 역할</span>
+        <h3>주민을 대신하지 않습니다.<br>누구를 먼저 찾아갈지 알려줍니다.</h3>
+        <p>모의고사와 같습니다. 수능은 아니지만 수능 전에 약한 과목을 알려주죠. 결과물은 "주민 의견"이 아니라 <b>설명회 전에 확인할 질문 목록</b>입니다.</p>
+        <div class="tvis"><ul class="check">
+          <li><i style="--i:0"></i><div>정림동 경로당 방문 — 앱 충전 가능 여부 확인<small>옥순 할머니 '신청 포기' 예측에서 도출</small></div></li>
+          <li><i style="--i:1"></i><div>시각장애인 단체 — 앱 화면낭독 사용성 점검<small>영호 씨네 '신청 불가' 예측에서 도출</small></div></li>
+          <li><i style="--i:2"></i><div>둔산동 학부모 5명 — 사용처 제한 체감 인터뷰<small>민정 씨 '아쉬움' 예측에서 도출</small></div></li>
+        </ul></div>
+      </div>
+      <div class="tcard" data-reveal style="--dl:.25s">
+        <span class="tnum">02 · 검증</span>
+        <h3>이미 끝난 정책으로<br>먼저 채점합니다.</h3>
+        <p>과거에 시행된 정책을 <b>결과를 알려주지 않고</b> 가상 주민에게 보여준 뒤, 예측한 쟁점을 실제로 접수된 민원과 비교합니다.</p>
+        <div class="tvis">
+          <div class="bt-h"><span>AI가 예측한 쟁점</span><span></span><span>실제 접수된 민원</span></div>
+          <div class="bt">
+            <div class="bt-row"><span class="p" style="--i:0">앱 인증 어려움</span><em style="--i:0"></em><span style="--i:0">고령층 앱 사용 민원</span></div>
+            <div class="bt-row"><span class="p" style="--i:1">사용처 제한 불만</span><em style="--i:1"></em><span style="--i:1">가맹점 범위 문의</span></div>
+            <div class="bt-row"><span class="p" style="--i:2">충전 한도 부족</span><em style="--i:2"></em><span style="--i:2">한도 상향 요청</span></div>
+            <div class="bt-row"><span class="p" style="--i:3">정산 지연 우려</span><em class="x" style="--i:3">✕</em><span class="miss" style="--i:3">해당 민원 없음</span></div>
+            <div class="bt-row"><span class="miss" style="--i:4">예측하지 못함</span><em class="x" style="--i:4">✕</em><span style="--i:4">캐시백 지급 지연</span></div>
+          </div>
+          <div class="bt-score"><b>3 / 5</b><small>적중 3 · 과잉 1 · 누락 1<br>(채점 방식 예시)</small></div>
+        </div>
+      </div>
+      <div class="loop" data-reveal>
+        <div>
+          <span class="tnum">+ 쓸수록 정확해지는 구조</span>
+          <h3>현장에서 확인한 결과를<br>다시 자료집에 넣습니다</h3>
+          <p>"AI가 스스로 배운다"를 현실적으로 구현하는 방법입니다. 현장에서 확인된 사실이 쌓일수록 다음 예측의 근거가 두터워집니다.</p>
+        </div>
+        <div class="cycle">
+          <div class="cy on"><i>🤖</i><b>예측</b><small>가상 주민 반응</small></div>
+          <div class="cy"><i>🚶</i><b>현장 확인</b><small>해당 주민 직접 만남</small></div>
+          <div class="cy"><i>📝</i><b>차이 기록</b><small>맞은 것 · 틀린 것</small></div>
+          <div class="cy"><i>📚</i><b>자료집 보강</b><small>다음 예측의 근거</small></div>
+          <div class="cycle-back">↺ 다시 예측으로 — 정책을 돌릴수록 정확도가 올라갑니다</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 06 확장 가능성 ============ -->
+<section id="scale" style="padding-top:40px">
+  <div class="wrap">
+    <span class="eyebrow" data-reveal>06 · 확장 가능성</span>
+    <h2 class="h2" data-reveal style="--dl:.1s">지역화폐는<br><em>첫 번째 정책</em>일 뿐입니다</h2>
+    <p class="lead" data-reveal style="--dl:.2s">아고라 서구의 핵심은 특정 정책이 아니라 <b>"공공데이터 자료집 + 가상 주민 집단 + 근거 태그"</b>라는 틀입니다. 자료집과 주민 집단만 바꾸면 다른 정책, 다른 지역에도 그대로 쓸 수 있습니다.</p>
+    <div class="scale-grid">
+      <div class="ripple" data-reveal="scale">
+        <div class="rp r4"><span>전국 지자체</span></div>
+        <div class="rp r3"><span>대전 5개 구</span></div>
+        <div class="rp r2"><span>서구의 모든 정책</span></div>
+        <div class="rp r1"><span>지역화폐</span></div>
+        <div class="rp-core">🏛️</div>
+      </div>
+      <div class="axes">
+        <div class="axis" data-reveal style="--dl:.1s">
+          <span class="an">① 정책을 넓힙니다</span>
+          <h4>지역화폐에서 서구의 모든 정책으로</h4>
+          <p>정책안 문서만 바꿔 넣으면 같은 광장에서 다른 정책을 점검할 수 있습니다.</p>
+          <div class="fchips"><span class="now">지역화폐</span><b>→</b><span>버스 노선 개편</span><span>쓰레기 배출 요일</span><span>공공시설 운영시간</span><span>복지 급여 기준</span><span>주차 정책</span></div>
+        </div>
+        <div class="axis" data-reveal style="--dl:.2s">
+          <span class="an">② 주민을 넓힙니다</span>
+          <h4>6개 집단에서 서구의 축소판으로</h4>
+          <p>집단을 계속 추가하고, 동별 인구 비율만큼 비중을 주면 <b>"서구 전체를 줄여 놓은 광장"</b>이 됩니다.</p>
+          <div class="fchips"><span class="now">현재 6개 집단</span><b>+</b><span>외국인 주민</span><span>다문화 가정</span><span>한부모 가구</span><span>대학생</span><span>교대근무자</span></div>
+        </div>
+        <div class="axis" data-reveal style="--dl:.3s">
+          <span class="an">③ 지역을 넓힙니다</span>
+          <h4>서구에서 대전, 그리고 전국으로</h4>
+          <p>통계연보·KOSIS·공공데이터포털은 전국이 같은 형식입니다. 다른 지자체는 <b>자기 지역 통계만 넣으면</b> 바로 쓸 수 있습니다.</p>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="sub-h" data-reveal>이런 업무에도 쓸 수 있습니다</h3>
+    <div class="uses">
+      <div class="use hl tilt" data-reveal style="--dl:.05s"><i>💰</i><h4>예산 편성 사전 점검</h4><p>신규 사업마다 "누가 체감하고 누가 빠지는지"를 한 장으로 요약해 예산 심의 자료로 씁니다.</p><span class="use-tag">기획예산과 본업과 직결</span></div>
+      <div class="use tilt" data-reveal style="--dl:.1s"><i>📜</i><h4>조례 입법예고 전 점검</h4><p>조문이 바뀌면 어떤 주민이 영향을 받는지 입법예고 전에 확인합니다.</p><span class="use-tag">법무·입법</span></div>
+      <div class="use tilt" data-reveal style="--dl:.15s"><i>🗳️</i><h4>주민참여예산 제안 검토</h4><p>제안 사업의 수혜 범위와 사각지대를 심사 참고자료로 정리합니다.</p><span class="use-tag">주민참여</span></div>
+      <div class="use tilt" data-reveal style="--dl:.05s"><i>🎤</i><h4>설명회 예상 질문집</h4><p>집단별로 나올 질문과 답변 초안을 미리 만들어 설명회를 준비합니다.</p><span class="use-tag">홍보·소통</span></div>
+      <div class="use tilt" data-reveal style="--dl:.1s"><i>✍️</i><h4>쉬운 안내문 만들기</h4><p>어르신·외국인 주민 눈높이로 안내문을 고쳐 쓰고, 가상 주민에게 먼저 읽혀봅니다.</p><span class="use-tag">민원·안내</span></div>
+      <div class="use tilt" data-reveal style="--dl:.15s"><i>📈</i><h4>시행 후 모니터링</h4><p>시행 뒤 실제 민원과 예측을 비교하고, 그 결과로 자료집을 계속 보강합니다.</p><span class="use-tag">성과관리</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 07 추진 계획 ============ -->
+<section id="plan" style="padding-top:40px">
+  <div class="wrap">
+    <span class="eyebrow" data-reveal>07 · 추진 계획</span>
+    <h2 class="h2" data-reveal style="--dl:.1s">이렇게<br><em>만들어 갑니다</em></h2>
+    <p class="lead" data-reveal style="--dl:.2s">기획예산과 업무 안에서 작게 시작하고, 검증된 만큼만 넓힙니다.</p>
+    <div class="road io">
+      <div class="road-line"><i></i></div>
+      <div class="rs" style="--i:0"><div class="dot"></div><div class="rs-card" data-reveal style="--dl:.1s">
+        <span class="when">1단계 · 1개월</span><h4>시제품</h4>
+        <ul><li>생성형 AI에 가상 주민 6명 설정을 넣은 대화형 시제품</li><li>지역화폐 과거 정책 1건으로 시험 운영</li><li>과 내부 공유와 피드백</li></ul>
+        <div class="out">산출물 · 페르소나 설정서 6종</div></div></div>
+      <div class="rs" style="--i:1"><div class="dot"></div><div class="rs-card" data-reveal style="--dl:.3s">
+        <span class="when">2단계 · 2~3개월</span><h4>자료집 연결</h4>
+        <ul><li>공공데이터 12종 수집·정리</li><li>발언별 근거 태그 자동 표시 (RAG)</li><li>민원 데이터 비식별 처리 확인</li></ul>
+        <div class="out">산출물 · 근거 자료집 1차본</div></div></div>
+      <div class="rs" style="--i:2"><div class="dot"></div><div class="rs-card" data-reveal style="--dl:.5s">
+        <span class="when">3단계 · 4개월</span><h4>과거 정책 채점</h4>
+        <ul><li>이미 시행된 정책 3건 사후 채점</li><li>실제 민원과 적중·누락 비교</li><li>믿고 쓸 수 있는 정확도 기준 설정</li></ul>
+        <div class="out">산출물 · 검증 보고서</div></div></div>
+      <div class="rs" style="--i:3"><div class="dot"></div><div class="rs-card" data-reveal style="--dl:.7s">
+        <span class="when">4단계 · 6개월~</span><h4>시범 적용</h4>
+        <ul><li>신규 사업 1건의 기획 단계에 적용</li><li>발견 쟁점 → 현장 확인 → 자료집 보강</li><li>주민참여예산 사업으로 확대 검토</li></ul>
+        <div class="out">산출물 · 적용 사례 1건</div></div></div>
+    </div>
+    <div class="maker" data-reveal>
+      <div><b>기획 · 대전 서구청 기획예산과</b><small>AI 실습 과제 · 서비스 기획안</small></div>
+      <span class="chip" style="background:var(--green-l);color:var(--green)">🔒 개인정보 미사용 — 공개 통계와 비식별 데이터만 활용</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 마무리 ============ -->
+<section class="cta">
+  <div class="blob b1"></div><div class="blob b2"></div>
+  <div class="wrap">
+    <h2 data-reveal>다음 정책은,<br><em>광장</em>에 먼저 올려보세요.</h2>
+    <p data-reveal style="--dl:.15s">아직 고칠 수 있을 때, 주민의 목소리를 먼저 듣습니다.</p>
+    <div class="hero-btns" data-reveal style="--dl:.3s">
+      <a class="btn btn-dark mag" href="#demo">시연 다시 해보기 <span class="arr">→</span></a>
+      <button class="btn btn-line mag" data-replay>▶ 인트로 다시 보기</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 아고라 서구 · 대전 서구청 기획예산과 AI 실습 과제</span>
+    <p>이 페이지에 등장하는 인물은 모두 공공 통계를 바탕으로 한 가상 인물이며, 인트로와 시연의 정책안·수치·반응은 설명을 위한 예시 시나리오입니다. 아고라 서구는 실제 주민 의견수렴을 대체하지 않고, 더 정확한 곳을 향하도록 보완합니다.</p>
+  </div>
+</footer>
+<script>
+/* =========================================================
+   데이터 ① 가상 주민 6명
+   (여기 글자만 고치면 카드·시연·인트로에 모두 반영됩니다)
+   ========================================================= */
+const P = [
+  {id:'ok',emoji:'👵',name:'옥순 할머니',age:76,dong:'정림동',role:'혼자 사는 어르신',pc:'var(--peach)',
+   q:'"카드 한 장이면 충분했어요."',
+   data:['대전 서구 통계연보 — 동별 65세 이상 1인가구','디지털정보격차 실태조사 — 고령층','대전광역시 사회조사 — 노후 생활'],
+   care:['늘 쓰던 결제 방식','걸어서 가는 전통시장'],wall:['앱 설치·본인인증','작은 글씨와 입력 시간제한']},
+  {id:'mj',emoji:'👩‍💼',name:'민정 씨',age:42,dong:'둔산동',role:'맞벌이 학부모',pc:'var(--sky)',
+   q:'"퇴근하면 동네 가게가 다 닫혀 있어요."',
+   data:['통계청 지역별고용조사 — 맞벌이 가구','대전 서구 통계연보 — 학령인구','상가(상권)정보 — 둔산동 업종 분포'],
+   care:['학원비·장보기 캐시백','시간 절약'],wall:['사용처 제한','영업시간과 퇴근 시간 불일치']},
+  {id:'sc',emoji:'🧑‍🍳',name:'상철 사장님',age:54,dong:'도마동',role:'골목 분식집 운영',pc:'var(--butter)',
+   q:'"손님이 골목으로 와야 가게가 살죠."',
+   data:['상가(상권)정보 — 도마동 음식점','대전 서구 통계연보 — 사업체 현황','지역사랑상품권 이용 현황'],
+   care:['매출 증가','빠른 정산'],wall:['정산 주기','단골 어르신 손님 이탈']},
+  {id:'hn',emoji:'💑',name:'하늘·준호',age:31,dong:'관저동',role:'신혼부부',pc:'var(--lav)',
+   q:'"가계부랑 연동되면 딱 좋겠어요."',
+   data:['통계청 신혼부부통계','주민등록 인구통계 — 관저동 전입','대전광역시 사회조사 — 소비 인식'],
+   care:['캐시백 총액','앱 편의성'],wall:['월 충전 한도','목돈 지출(이사·가전)']},
+  {id:'dy',emoji:'🧑‍🎓',name:'도윤 씨',age:26,dong:'갈마동',role:'취업준비생 1인가구',pc:'var(--mint2)',
+   q:'"편의점이 제 부엌이에요."',
+   data:['경제활동인구조사 — 청년층 부가조사','인구주택총조사 — 청년 1인가구','상가(상권)정보 — 프랜차이즈 비율'],
+   care:['소액 결제 혜택','생활 밀착 사용처'],wall:['편의점·프랜차이즈 제외']},
+  {id:'yh',emoji:'👨‍🦯',name:'영호 씨네',age:58,dong:'변동',role:'시각장애인 가구',pc:'var(--rose)',
+   q:'"화면낭독만 되면 혼자서도 할 수 있어요."',
+   data:['등록장애인 현황 — 보건복지부·KOSIS','디지털정보격차 실태조사 — 장애인','웹 접근성 실태조사'],
+   care:['혼자 할 수 있는가','접근성'],wall:['이름 없는 버튼','본인인증 보안문자']}
+];
+const byId = Object.fromEntries(P.map(p => [p.id, p]));
+const FEEL_EMO = {bad:'😣', meh:'😕', good:'😊'};
+const FEEL_CLR = {bad:'var(--bad)', meh:'var(--meh)', good:'var(--good)'};
+
+/* =========================================================
+   데이터 ② 인트로 장면 — "같은 정책, 여섯 개의 하루"
+   props: [이모지, 가로 위치, 세로 위치, 크기]
+   ========================================================= */
+const SC = [
+ {p:'ok',time:'오전 9:40',place:'한민시장 채소가게',s1:'#FBD3AE',s2:'#FFF2E0',sun:'#FFB45E',gr:'#C9905F',sign:'한민시장',cx:'7%',
+  props:[['🏮','40%','12%','34px'],['🥬','44%','48%','44px'],['🍅','34%','58%','32px'],['🧅','54%','56%','30px'],['🧺','40%','64%','48px']],
+  say:'카드로는 이제 안 된다고요?',
+  phone:`<div class="ps-app">대전 지역화폐</div><div class="ps-t">본인인증</div><div class="ps-tiny">휴대폰으로 전송된 인증번호 6자리를 3분 이내에 입력해 주세요. 인증 후 계좌 연결 및 결제 비밀번호 설정이 필요합니다.</div><div class="ps-otp"><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="ps-box ps-err late">⏱ 인증 시간이 초과되었습니다</div>`,
+  th:'카드 한 장이면 됐는데, 이제 이 작은 화면으로 하라네. 손주 올 때까지 기다려야지 뭐.',
+  feel:'bad',ft:'불편 · 신청 포기',
+  ev:['디지털정보격차 실태조사 · 고령층','서구 통계연보 · 동별 1인가구','국민신문고 · 앱 사용 어려움 민원']},
+ {p:'mj',time:'오후 7:50',place:'둔산동 학원가',s1:'#3A3E78',s2:'#F29C7A',sun:'#FFCF8A',gr:'#4A4466',sign:'○○수학학원',cx:'7%',
+  props:[['🏢','56%','14%','70px'],['🏫','34%','30%','54px'],['🚦','26%','50%','36px']],
+  say:'학원비는 캐시백이 안 된다고요?',
+  phone:`<div class="ps-app">결제 알림</div><div class="ps-amt">350,000원</div><div class="ps-sub">○○수학학원 · 결제 완료</div><div class="ps-box ps-warn late" style="--dl:2.8s">캐시백 0원<br><small>골목상권 가맹점이 아닙니다</small></div><div class="ps-row late" style="--dl:3.4s"><span>지난달 캐시백</span><b>35,000원</b></div>`,
+  th:'학원비 캐시백으로 한 달 반찬값은 나왔거든요. 퇴근하고 나면 골목 가게는 이미 문을 닫았고요.',
+  feel:'meh',ft:'아쉬움',
+  ev:['지역별고용조사 · 맞벌이 가구','상가(상권)정보 · 둔산동 업종','대전 사회조사 · 소비생활']},
+ {p:'sc',time:'낮 12:20',place:'도마동 골목 분식집',s1:'#9FD4F5',s2:'#E9F7FF',sun:'#FFD84D',gr:'#B7A58A',sign:'상철이네 분식',cx:'7%',
+  props:[['🍢','40%','46%','42px'],['🍜','50%','56%','36px'],['🧑‍🤝‍🧑','50%','22%','54px'],['🍙','34%','60%','30px']],
+  say:'어서 오세요! 떡볶이 2인분이요~',
+  phone:`<div class="ps-app">가게 결제 알림</div><div class="ps-noti" style="--i:0"><span>💳 지역화폐</span><b>+8,000</b></div><div class="ps-noti" style="--i:1"><span>💳 지역화폐</span><b>+12,500</b></div><div class="ps-noti" style="--i:2"><span>💳 지역화폐</span><b>+6,000</b></div><div class="ps-box ps-ok late" style="--dl:4.4s">오늘 지역화폐 결제 23건 ▲</div>`,
+  th:'마트로 가던 손님이 골목으로 온다니 반갑죠. 다만 정산이 늦어지면 재료값 대기가 빠듯해요.',
+  feel:'good',ft:'기대 · 조건부',
+  ev:['상가(상권)정보 · 도마동 음식점','지역사랑상품권 이용 현황','서구 통계연보 · 사업체 현황']},
+ {p:'hn',time:'토요일 오후 3:00',place:'관저동 동네 카페',s1:'#FFD3DF',s2:'#FFF5EA',sun:'#FFB6A3',gr:'#D8B79A',sign:'CAFE 관저',cx:'6%',
+  props:[['☕','44%','52%','40px'],['🥐','54%','58%','32px'],['🪴','34%','40%','46px'],['🎈','50%','14%','36px']],
+  say:'앱이라 가계부랑 바로 연동되네?',
+  phone:`<div class="ps-app">우리집 가계부</div><div class="ps-t">이번 달 캐시백</div><div class="ps-amt g">12,400원</div><div class="ps-bars"><i style="--i:0;--h:40%"></i><i style="--i:1;--h:65%"></i><i style="--i:2;--h:50%"></i><i style="--i:3;--h:85%"></i><i style="--i:4;--h:70%"></i></div><div class="ps-box ps-warn late" style="--dl:4s">월 충전 한도 30만 원 도달</div>`,
+  th:'동네 가게에서 쓰니 캐시백이 쏠쏠해요. 다만 한도가 줄어서 이사 준비할 목돈엔 못 쓰겠네요.',
+  feel:'good',ft:'기대',
+  ev:['통계청 신혼부부통계','주민등록 인구통계 · 관저동 전입','대전 사회조사 · 소비 인식']},
+ {p:'dy',time:'밤 11:10',place:'갈마동 편의점',s1:'#0E1230',s2:'#2B3170',sun:'#F4F1C9',gr:'#1F2342',sign:'24시 편의점',cx:'7%',
+  props:[['✨','22%','14%','22px'],['⭐','66%','26%','18px'],['✨','84%','44%','16px'],['🏪','40%','28%','74px']],
+  say:'여기도 안 된다고…?',
+  phone:`<div class="ps-app">대전 지역화폐</div><div class="ps-amt">4,800원</div><div class="ps-sub">삼각김밥 · 컵라면</div><div class="ps-box ps-err late" style="--dl:3s">캐시백 대상 아님<br><small>프랜차이즈 가맹점</small></div><div class="ps-row late" style="--dl:3.6s"><span>자주 가는 곳 중 대상</span><b>2 / 5곳</b></div>`,
+  th:'제가 가는 곳이 편의점, 스터디카페, 김밥집이 전부인데 절반이 빠지네요. 앱은 편한데 쓸 데가 없어요.',
+  feel:'meh',ft:'아쉬움',
+  ev:['청년층 부가조사 · 취업 준비','상가(상권)정보 · 프랜차이즈 비율','국민신문고 · 사용처 문의 민원']},
+ {p:'yh',time:'오전 11:30',place:'변동 행정복지센터 앞',s1:'#CFE3F4',s2:'#F2F8FD',sun:'#FFE08A',gr:'#9DB3A5',sign:'변동 행정복지센터',cx:'7%',
+  props:[['🏛️','44%','22%','66px'],['🌳','30%','34%','50px'],['🦮','30%','60%','42px']],
+  say:'충전 버튼이 어디 있는 거지?',
+  phone:`<div class="ps-app">대전 지역화폐</div><div class="ps-grid"><i>▢</i><i>▢</i><i>▢</i><i>▢</i></div><div class="ps-sr late" style="--dl:2.6s">🔊 "버튼"… "버튼"… "이미지"…</div><div class="ps-box ps-err late" style="--dl:3.8s">충전 메뉴를 찾을 수 없음</div>`,
+  th:'화면낭독기가 "버튼"이라고만 읽어요. 뭘 누르는 건지 모르니, 결국 아들이 퇴근할 때까지 기다립니다.',
+  feel:'bad',ft:'불편 · 신청 포기',
+  ev:['등록장애인 현황 · KOSIS','디지털정보격차 실태조사 · 장애인','웹 접근성 실태조사']}
+];
+/* =========================================================
+   인트로 재생기
+   ========================================================= */
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';   // 새로고침해도 맨 위에서 시작
+window.scrollTo(0, 0);
+const intro = document.getElementById('intro');
+const stage = document.getElementById('iStage');
+const barsEl = document.getElementById('iBars');
+const pauseBtn = document.getElementById('iPause');
+const DUR = {title:4800, scene:8400};
+
+function titleSlide(){
+  return `<div class="slide" data-dur="${DUR.title}"><div class="ttl">
+    <span class="ttl-k">2027년 1월 · 가상의 정책안</span>
+    <h2><span class="ln"><span style="--dl:.2s">대전 지역화폐가</span></span><span class="ln"><span style="--dl:.45s">이렇게 바뀐다면?</span></span></h2>
+    <div class="ttl-chips">
+      <span style="--dl:1.3s"><b>①</b>실물카드 발급 중단 · 모바일 앱 전용</span>
+      <span style="--dl:1.7s"><b>②</b>캐시백은 골목상권 가맹점만</span>
+      <span style="--dl:2.1s"><b>③</b>월 충전 한도 50만 → 30만 원</span>
+    </div>
+    <p class="ttl-note">※ 설명을 위해 만든 가상의 정책안입니다</p>
+  </div></div>`;
+}
+function sceneSlide(s, i){
+  const p = byId[s.p];
+  const props = s.props.map((r,k) => `<span class="prop" style="--x:${r[1]};--y:${r[2]};--fs:${r[3]};--dl:${.6+k*.15}s">${r[0]}</span>`).join('');
+  const ev = s.ev.map((e,k) => `<span style="--i:${k}">📎 ${e}</span>`).join('');
+  return `<div class="slide" data-dur="${DUR.scene}" data-sc="${i}"><div class="scene">
+    <div class="dio" style="--s1:${s.s1};--s2:${s.s2};--sun:${s.sun};--gr:${s.gr};--cx:${s.cx}">
+      <div class="dio-sun"></div>${props}<div class="dio-ground"></div>
+      <div class="dio-sign">${s.sign}</div>
+      <div class="char">${p.emoji}</div>
+      <div class="emo">${FEEL_EMO[s.feel]}</div>
+      <div class="say">${s.say}</div>
+      <div class="phone"><div class="scr">${s.phone}</div></div>
+    </div>
+    <div class="sc-txt">
+      <div class="sc-idx">0${i+1}</div>
+      <div class="sc-meta"><b>${s.time}</b><span>·</span><span>${s.place}</span></div>
+      <div class="sc-who"><small>${p.dong} · ${p.age}세 · ${p.role}</small>${p.name}</div>
+      <span class="feel ${s.feel}">${FEEL_EMO[s.feel]} ${s.ft}</span>
+      <p class="sc-th"></p>
+      <div class="sc-ev-l">📎 이 장면의 근거 공공데이터</div>
+      <div class="sc-ev">${ev}</div>
+    </div>
+  </div></div>`;
+}
+function sumSlide(){
+  const faces = SC.map((s,k) => `<div style="--i:${k};--pc:${byId[s.p].pc};--fc:${FEEL_CLR[s.feel]}">${byId[s.p].emoji}</div>`).join('');
+  const cnt = f => SC.filter(s => s.feel === f).length;
+  return `<div class="slide" data-dur="0"><div class="sum">
+    <div class="faces">${faces}</div>
+    <h2><span class="ln"><span style="--dl:.5s">같은 정책,</span></span><span class="ln"><span style="--dl:.7s">여섯 개의 하루.</span></span></h2>
+    <div class="sum-stats fade" style="--dl:1.2s">
+      <div><b style="color:var(--bad)">${cnt('bad')}</b><span>😣 불편 · 신청 포기</span></div>
+      <div><b style="color:var(--meh)">${cnt('meh')}</b><span>😕 아쉬움</span></div>
+      <div><b style="color:var(--good)">${cnt('good')}</b><span>😊 기대</span></div>
+    </div>
+    <p class="fade" style="--dl:1.6s">이 반응을 설명회가 아니라, <b>정책을 설계하는 단계</b>에서 들을 수 있다면?</p>
+    <button class="btn fade" style="--dl:2s" id="iEnter">아고라 서구 들어가기 <span class="arr">→</span></button>
+  </div></div>`;
+}
+stage.innerHTML = titleSlide() + SC.map(sceneSlide).join('') + sumSlide();
+const slides = [...stage.children];
+barsEl.innerHTML = slides.map(() => '<span><i></i></span>').join('');
+const bars = [...barsEl.children];
+
+let cur = -1, tmr = null, tStart = 0, tLeft = 0, paused = false, typer = null, typeWait = null;
+
+function typeText(el, text){
+  clearInterval(typer); clearTimeout(typeWait);
+  el.innerHTML = '<span></span><i class="caret"></i>';
+  const sp = el.firstChild; let n = 0;
+  typeWait = setTimeout(() => {
+    typer = setInterval(() => {
+      if (paused) return;
+      sp.textContent = text.slice(0, ++n);
+      if (n >= text.length) clearInterval(typer);
+    }, 34);
+  }, 1700);
+}
+function go(i){
+  if (i < 0) i = 0;
+  if (i >= slides.length) { closeIntro(); return; }
+  clearTimeout(tmr);
+  slides.forEach((s,k) => s.classList.toggle('on', k === i));
+  bars.forEach((b,k) => { b.className = k < i ? 'done' : ''; });
+  cur = i;
+  const d = +slides[i].dataset.dur;
+  const bar = bars[i];
+  bar.style.setProperty('--d', d + 'ms');
+  void bar.offsetWidth;                 // 막대 애니메이션을 처음부터 다시 시작
+  bar.className = d ? 'on' : 'done';
+  const sc = slides[i].dataset.sc;
+  if (sc !== undefined) typeText(slides[i].querySelector('.sc-th'), SC[sc].th);
+  if (d) { tLeft = d; tStart = Date.now(); if (!paused) tmr = setTimeout(() => go(cur + 1), d); }
+}
+function setPause(v){
+  paused = v;
+  intro.classList.toggle('paused', v);
+  pauseBtn.textContent = v ? '▶ 재생' : '일시정지';
+  if (v) { clearTimeout(tmr); tLeft -= Date.now() - tStart; }
+  else if (cur >= 0 && +slides[cur].dataset.dur) { tStart = Date.now(); tmr = setTimeout(() => go(cur + 1), Math.max(tLeft, 300)); }
+}
+function closeIntro(){
+  if (intro.classList.contains('out')) return;
+  clearTimeout(tmr); clearInterval(typer); clearTimeout(typeWait);
+  window.scrollTo({top:0, behavior:'instant'});   // 인트로가 끝나면 항상 첫 화면부터
+  intro.classList.add('out');
+  document.body.classList.remove('lock');
+  document.body.classList.add('play');
+  setTimeout(() => { if (intro.classList.contains('out')) { intro.classList.add('gone'); slides.forEach(s => s.classList.remove('on')); } }, 1150);
+  if (typeof onIntroClosed === 'function') onIntroClosed();
+}
+function openIntro(){
+  window.scrollTo({top:0, behavior:'instant'});
+  intro.classList.remove('gone');
+  void intro.offsetWidth;
+  intro.classList.remove('out');
+  document.body.classList.add('lock');
+  setPause(false);
+  go(0);
+}
+stage.addEventListener('click', e => {
+  if (e.target.closest('button')) return;
+  const r = stage.getBoundingClientRect();
+  if (e.clientX - r.left < r.width * 0.28) go(cur - 1); else go(cur + 1);
+});
+document.getElementById('iEnter').addEventListener('click', closeIntro);
+document.getElementById('iSkip').addEventListener('click', closeIntro);
+pauseBtn.addEventListener('click', () => setPause(!paused));
+document.querySelectorAll('[data-replay]').forEach(b => b.addEventListener('click', openIntro));
+document.addEventListener('keydown', e => {
+  if (intro.classList.contains('out')) return;
+  if (e.key === 'ArrowRight') go(cur + 1);
+  else if (e.key === 'ArrowLeft') go(cur - 1);
+  else if (e.key === ' ') { e.preventDefault(); setPause(!paused); }
+  else if (e.key === 'Escape') closeIntro();
+});
+
+/* =========================================================
+   가상 주민 카드
+   ========================================================= */
+document.getElementById('peopleGrid').innerHTML = P.map((p,i) => `
+  <div class="flip" data-reveal style="--dl:${(i%3)*.12}s;--pc:${p.pc}" tabindex="0">
+    <div class="flip-in">
+      <div class="face front">
+        <div class="pf-top"><span>${p.dong} · ${p.age}세</span><span>↻ 뒤집기</span></div>
+        <div class="pf-emoji">${p.emoji}</div>
+        <div class="pf-name">${p.name}</div>
+        <div class="pf-role">${p.role}</div>
+        <div class="pf-q">${p.q}</div>
+      </div>
+      <div class="face back">
+        <h5>이 사람을 만든 데이터</h5><ul>${p.data.map(d => `<li>${d}</li>`).join('')}</ul>
+        <h5>지역화폐에서 중요한 것</h5><ul>${p.care.map(d => `<li>${d}</li>`).join('')}</ul>
+        <h5>걸리기 쉬운 장벽</h5><ul class="warn">${p.wall.map(d => `<li>${d}</li>`).join('')}</ul>
+        <div class="foot">통계로 구성한 가상 인물입니다</div>
+      </div>
+    </div>
+  </div>`).join('');
+document.querySelectorAll('.flip').forEach(f => f.addEventListener('click', () => f.classList.toggle('on')));
+
+go(0);
+</script>
+<script>
+/* =========================================================
+   시연: 정책 조절판 → 6명의 반응 계산
+   (설명용 규칙. 실제 서비스에서는 AI가 자료집을 근거로 생성합니다)
+   ========================================================= */
+const S = {cb:10, lim:50, app:0, alley:0, assist:0, a11y:0};
+const PRESET = {
+  now:  {cb:10, lim:50, app:0, alley:0, assist:0, a11y:0},
+  intro:{cb:10, lim:30, app:1, alley:1, assist:0, a11y:0},
+  fix:  {cb:12, lim:40, app:1, alley:1, assist:1, a11y:1}
+};
+const ANG = {ok:-90, mj:-30, sc:30, hn:90, dy:150, yh:210};
+const STG = ['알게 됨','신청','충전','사용'];
+const FEEL_TXT = {good:'찬성', meh:'보류', bad:'반대'};
+const DOT_CLR = {good:'var(--good)', meh:'var(--meh)', bad:'var(--bad)'};
+const GROUP = {ok:'70대 이상 1인가구', mj:'맞벌이 학부모 가구', sc:'골목 자영업자', hn:'신혼부부', dy:'청년 1인가구', yh:'장애인 가구'};
+const EV = {
+  ok:['디지털정보격차 실태조사 · 고령층','서구 통계연보 · 동별 1인가구','국민신문고 · 앱 사용 어려움'],
+  mj:['지역별고용조사 · 맞벌이 가구','상가(상권)정보 · 둔산동 업종','대전 사회조사 · 소비생활'],
+  sc:['상가(상권)정보 · 업종·프랜차이즈','지역사랑상품권 이용 현황','서구 통계연보 · 사업체 현황'],
+  hn:['통계청 신혼부부통계','주민등록 인구통계 · 관저동 전입','대전 사회조사 · 소비 인식'],
+  dy:['청년층 부가조사','상가(상권)정보 · 프랜차이즈 비율','국민신문고 · 사용처 민원'],
+  yh:['등록장애인 현황 · 장애 유형별','디지털정보격차 실태조사 · 장애인','웹 접근성 실태조사']
+};
+/* 집단마다 사정이 다른 6명 — 같은 집단 안에서도 반응이 갈리는 모습을 보여줍니다 */
+const V = {
+  ok:[{w:'스마트폰 없음 · 81세',dig:0},{w:'문자만 쓰는 · 78세',dig:.15},{w:'자녀가 근처 사는 · 76세',dig:.2,fam:1},
+      {w:'손주가 자주 오는 · 79세',dig:.1,fam:1},{w:'복지관 교육 받은 · 74세',dig:.5},{w:'카톡·송금 하는 · 72세',dig:.8}],
+  mj:[{w:'6시 퇴근 · 초등 1자녀',late:.1},{w:'야근 잦은 · 중학생 2자녀',late:.9,edu:1},{w:'교대근무 · 초등 2자녀',late:.6,edu:1},
+      {w:'재택 병행 · 유치원생',late:.2},{w:'8시 퇴근 · 고등학생',late:.8,edu:1},{w:'단축근무 · 초등 1자녀',late:0}],
+  sc:[{w:'분식집 · 단골 대부분 어르신',old:.8},{w:'반찬가게 · 동네 단골',old:.5},{w:'편의점 가맹점주',old:.2,fr:1},
+      {w:'카페 · 젊은 손님 위주',old:.1},{w:'치킨 프랜차이즈 점주',old:.2,fr:1},{w:'전통시장 채소가게',old:.9}],
+  hn:[{w:'맞벌이 · 이사 준비 중',move:1},{w:'외벌이 · 출산 예정',save:1},{w:'맞벌이 · 전세 거주'},
+      {w:'주말부부 · 평일 타지 근무',away:1},{w:'맞벌이 · 가전 구매 예정',move:1},{w:'외벌이 · 알뜰 소비',save:1}],
+  dy:[{w:'편의점 위주 · 자취 3년차',fr:.9},{w:'스터디카페 이용',fr:.6},{w:'본가 거주 · 알바 병행',fr:.3},
+      {w:'배달 위주 식사',fr:.8},{w:'동네 식당 단골',fr:.2},{w:'헬스·카페 자주',fr:.5}],
+  yh:[{w:'시각장애 · 58세',t:'v'},{w:'시각장애 · 34세 (앱 능숙)',t:'v'},{w:'시각장애 · 가족과 거주',t:'vf'},
+      {w:'지체장애 · 휠체어 이용',t:'p'},{w:'청각장애',t:'h'},{w:'발달장애 · 보호자 동행',t:'d'}]
+};
+
+/* 한 사람(v)이 정책(s)을 만났을 때의 반응 — 설명용 규칙 */
+function evaluate(id, s, v){
+  let sc = 0, q = '', is = null;              // is: [수준, 쟁점 이름, 설명]
+  const st = ['ok','ok','ok','ok'];
+  const block = k => { st[k] = 'block'; for (let j = k+1; j < 4; j++) st[j] = 'off'; };
+  const warn = k => { if (st[k] === 'ok') st[k] = 'warn'; };
+  if (id === 'ok') {
+    sc = 28 + (s.cb-10)*2 + (s.alley ? 8 : 0);
+    const can = v.dig >= .5 || v.fam;
+    if (s.app && can) {
+      sc -= v.dig >= .7 ? 4 : 18;
+      if (v.dig < .7) { warn(1); is = ['warn','어르신 가족·교육 의존','혼자서는 앱 가입이 어려움 → 큰 글씨·쉬운 가입 절차 필요']; }
+      q = v.dig >= .7 ? '앱이면 나도 할 줄 알아요. 글씨만 크면 좋겠네.' : v.fam ? '자식이 대신 깔아주면 쓰긴 하겠지.' : '복지관에서 배운 대로 해보면 되겠지.';
+    }
+    else if (s.app && s.assist) { sc -= 5; warn(2); q = '주민센터에서 대신 충전해 주면 그건 할 만하지.'; }
+    else if (s.app) { sc -= 75; block(1); q = v.dig === 0 ? '휴대폰이 없는데 어떻게 하라는 거야.' : '카드 한 장이면 됐는데… 이 작은 화면으로 하라네.';
+      is = ['block','어르신 신청 포기','앱 본인인증 단계에서 이탈 → 주민센터 대리 충전 창구 필요']; }
+    else q = s.alley ? '시장에서 쓰는 거니 난 상관없어.' : '하던 대로 카드로 쓰면 되지.';
+  }
+  if (id === 'mj') {
+    sc = 28 + (s.cb-10)*3 + (s.lim-50)*(v.edu ? .9 : .4) + (s.app ? 5 : 0);
+    if (s.alley) { sc -= 12 + 30*v.late; if (v.late >= .5) { warn(3); is = ['warn','맞벌이 가구 사용처 공백','퇴근 후 이용할 골목 가맹점 부족 → 야간 영업 가맹점 안내 필요']; } }
+    if (s.lim <= 30 && v.edu) { sc -= 8; warn(2); is = is || ['warn','학부모 충전 한도 부족','학원비 한 번 결제로 한도 소진']; }
+    q = s.alley && v.late >= .5 ? '퇴근하면 골목 가게는 다 닫혀 있어요.'
+      : s.lim <= 30 && v.edu ? '한도가 줄면 학원비 한 번에 끝나요.'
+      : s.alley ? '동네 반찬가게에서 쓰면 되니 괜찮아요.'
+      : v.edu ? '캐시백 되면 학원비는 무조건 이걸로 내죠.' : '장볼 때 쏠쏠하게 쓰고 있어요.';
+  }
+  if (id === 'sc') {
+    sc = 12 + (s.cb-10)*2;
+    const lose = s.app && !s.assist;
+    if (s.alley) sc += v.fr ? -35 : 50;
+    if (lose) sc -= 30*v.old;
+    if (s.alley && v.fr) { warn(3); is = ['warn','프랜차이즈 가맹점주 제외','동네 소상공인이지만 간판 때문에 혜택 제외 → 기준 재검토']; }
+    else if (lose && v.old >= .5) is = ['warn','골목 가게 단골 이탈 우려','어르신 손님이 결제 수단을 잃음 → 매출 감소 가능'];
+    q = s.alley && v.fr ? '저도 동네 사장인데, 간판이 프랜차이즈라고 빠지네요.'
+      : s.alley && lose && v.old >= .5 ? '손님이 골목으로 오는 건 반갑지만, 단골 어르신들은 앱을 못 써요.'
+      : s.alley ? '마트 가던 손님이 골목으로 온다니 반갑죠!'
+      : lose && v.old >= .5 ? '앱만 되면 단골 어르신들 발길이 끊겨요.' : '지역화폐 손님이 꾸준히 오면 좋죠.';
+  }
+  if (id === 'hn') {
+    sc = 28 + (s.cb-10)*(v.save ? 5 : 3) + (s.lim-50)*(v.move ? .9 : .35) + (s.app ? 15 : 0) - (s.alley ? 6 : 0) - (v.away ? 14 : 0);
+    if (s.lim <= 30 && v.move) { warn(2); is = ['warn','신혼가구 목돈 지출 제약','이사·가전 구매 때 한도 부족']; }
+    if (v.away) warn(3);
+    q = s.lim <= 30 && v.move ? '한도가 줄어서 이사 준비할 목돈엔 못 쓰겠네요.'
+      : v.away ? '평일엔 타지에 있어서 주말에만 쓸 수 있어요.'
+      : v.save ? '캐시백은 무조건 챙기죠. 요즘 한 푼이 아쉬워요.'
+      : s.app ? '앱이라 가계부랑 바로 연동되네요!' : '동네 카페에서 쓰면 쏠쏠하죠.';
+  }
+  if (id === 'dy') {
+    sc = 16 + (s.cb-10)*2.5 + (s.app ? 12 : 0) - (s.alley ? 60*v.fr : 0);
+    if (s.alley && v.fr >= .5) { warn(3); is = ['warn','청년 1인가구 주 사용처 제외','편의점·프랜차이즈 비중 높음 → 생활밀착 업종 예외 검토']; }
+    q = s.alley && v.fr >= .5 ? '제가 가는 곳 절반이 빠지네요. 앱은 편한데 쓸 데가 없어요.'
+      : s.alley ? '동네 식당은 대부분 되니까 괜찮아요.'
+      : s.app ? '앱이면 오히려 편하죠. 카드 잃어버릴 일도 없고.' : '소액이라도 캐시백이면 챙겨야죠.';
+  }
+  if (id === 'yh') {
+    sc = 26 + (s.cb-10)*1.5 - (s.alley ? 5 : 0);
+    q = '카드가 있으니 가족 도움 없이도 써요.';
+    if (s.app && v.t === 'v') {
+      if (s.a11y) { sc += 6; q = '화면낭독이 되니까 이제 혼자서도 충전해요!'; }
+      else { sc -= 70; block(1); q = '화면낭독기가 "버튼"이라고만 읽어요. 뭘 누르라는 건지…';
+        is = ['block','시각장애인 신청 불가','화면낭독 미지원 → 웹 접근성 인증 후 출시 필요']; }
+    }
+    if (s.app && v.t === 'vf' && !s.a11y) { sc -= 25; warn(1); q = '딸이 퇴근해야 대신 눌러줄 수 있어요.'; is = ['warn','시각장애인 가족 의존','가족이 대신 조작 → 웹 접근성 인증 필요']; }
+    if (v.t === 'p') {
+      if (s.app) { sc += 12; q = '주민센터 안 가도 되니 오히려 편해요.'; }
+      if (s.alley) { sc -= 15; warn(3); q = '골목 가게는 턱이 높아서 들어가기가 힘들어요.'; is = ['warn','휠체어 이용자 접근 제약','경사로 없는 골목 가게 다수 → 접근 가능 가맹점 표시 필요']; }
+    }
+    if (s.app && v.t === 'h') { sc -= 8; warn(1); q = '문자 인증은 괜찮은데, 전화 인증이면 저는 못 해요.'; is = ['warn','청각장애인 전화 인증 불가','ARS 인증만 있으면 이용 불가 → 문자 인증 병행']; }
+    if (s.app && v.t === 'd' && !s.assist) { sc -= 22; warn(1); q = '혼자서는 어렵고 보호자가 같이 해야 해요.'; is = ['warn','발달장애인 신청 도움 필요','보호자 동행 필수 → 대리 신청 창구와 연계']; }
+  }
+  sc = Math.max(-100, Math.min(100, Math.round(sc)));
+  const blocked = st.includes('block');
+  return {sc, st, q, is, blocked, feel: blocked || sc <= -20 ? 'bad' : sc >= 25 ? 'good' : 'meh'};
+}
+
+const $ = id => document.getElementById(id);
+const agora = $('agora'), ppEls = {}, dotEls = {};
+let sel = 'ok', selV = 0, lastIss = '';
+const rad = sc => Math.max(13, Math.min(43, 26 - sc * 0.2));   // 찬성할수록 중심 가까이
+const place = (el, r, deg) => { const a = deg * Math.PI / 180; el.style.left = (50 + r * Math.cos(a)) + '%'; el.style.top = (50 + r * Math.sin(a)) + '%'; };
+
+P.forEach(p => {
+  const el = document.createElement('div');
+  el.className = 'pp';
+  el.style.setProperty('--pc', p.pc);
+  el.style.left = el.style.top = '50%';
+  el.title = GROUP[p.id];
+  el.innerHTML = `${p.emoji}<span class="pp-tag"></span>`;
+  el.addEventListener('click', () => { sel = p.id; selV = 0; render(); });
+  agora.appendChild(el); ppEls[p.id] = el;
+  dotEls[p.id] = V[p.id].map((v, j) => {
+    const d = document.createElement('div');
+    d.className = 'dot';
+    d.style.setProperty('--pc', p.pc); d.style.setProperty('--j', j);
+    d.style.left = d.style.top = '50%';
+    d.title = `${GROUP[p.id]} · ${v.w}`;
+    d.addEventListener('click', () => { sel = p.id; selV = j; render(); });
+    agora.appendChild(d); return d;
+  });
+});
+$('dVars').addEventListener('click', e => { const b = e.target.closest('.var'); if (b) { selV = +b.dataset.j; render(); } });
+
+function render(){
+  const cnt = {good:0, meh:0, bad:0}, iss = {};
+  let blocked = 0, total = 0, G = [];
+  P.forEach(p => {
+    const rs = V[p.id].map(v => evaluate(p.id, S, v));
+    if (p.id === sel) G = rs;
+    const nb = rs.filter(r => r.blocked).length;
+    rs.forEach((r, j) => {
+      total++; if (r.blocked) blocked++; else cnt[r.feel]++;
+      const d = dotEls[p.id][j];
+      place(d, rad(r.sc), ANG[p.id] + (j - 2.5) * 9);
+      d.style.setProperty('--fc', DOT_CLR[r.feel]);
+      d.classList.toggle('blk', r.blocked);
+      d.classList.toggle('on', p.id === sel && j === selV);
+      if (r.is) { const k = r.is[1]; iss[k] = iss[k] || {lv:r.is[0], t:k, d:r.is[2], p, n:0, of:rs.length}; iss[k].n++; }
+    });
+    const el = ppEls[p.id];
+    place(el, rad(rs.reduce((a, r) => a + r.sc, 0) / rs.length), ANG[p.id]);
+    el.classList.toggle('alert', nb > 0);
+    el.classList.toggle('sel', p.id === sel);
+    const n = f => rs.filter(r => r.feel === f).length;
+    const major = ['good','meh','bad'].sort((a, b) => n(b) - n(a))[0];
+    const tag = el.querySelector('.pp-tag');
+    tag.className = 'pp-tag ' + (nb ? 'bad' : major);
+    tag.textContent = nb ? `불가 ${nb}명` : FEEL_TXT[major];
+  });
+  $('sY').textContent = cnt.good; $('sM').textContent = cnt.meh; $('sN').textContent = cnt.bad; $('sB').textContent = blocked;
+  const reach = Math.round((total - blocked) / total * 100);
+  $('reachBar').style.width = reach + '%';
+  $('reachBar').style.backgroundPosition = reach + '% 0';
+  $('reachV').textContent = reach + '%';
+
+  /* 선택한 집단: 6명의 분포와 각자의 사정 */
+  const p = byId[sel], cur = G[selV], gc = {good:0, meh:0, bad:0};
+  let gb = 0; G.forEach(r => r.blocked ? gb++ : gc[r.feel]++);
+  $('dWho').innerHTML = `<i style="--pc:${p.pc}">${p.emoji}</i><div><b>${GROUP[sel]}</b><small>대표 인물 ${p.name} · 사정이 다른 ${G.length}명</small></div>`;
+  $('dDist').innerHTML = G.map((r, j) => `<i class="${j === selV ? 'on' : ''}" style="--fc:${r.blocked ? '#C2411C' : DOT_CLR[r.feel]}"></i>`).join('');
+  $('dDistL').innerHTML = `<span>😊 찬성 ${gc.good}</span><span>😕 보류 ${gc.meh}</span><span>😣 반대 ${gc.bad}</span><span>🚨 신청 불가 ${gb}</span>`;
+  $('dVars').innerHTML = G.map((r, j) => `<button class="var ${j === selV ? 'on' : ''}" data-j="${j}" style="--fc:${DOT_CLR[r.feel]}"><i></i><span>${V[sel][j].w}</span><em>${r.blocked ? '신청 불가' : FEEL_TXT[r.feel]}</em></button>`).join('');
+  $('dJr').innerHTML = STG.map((t, k) => `<div class="st ${cur.st[k]}"><div class="d">${{ok:'✓',warn:'!',block:'✕',off:''}[cur.st[k]]}</div>${t}</div>`).join('');
+  const dq = $('dQ'), qt = `💬 ${V[sel][selV].w} — "${cur.q}"`;
+  if (dq.textContent !== qt) { dq.textContent = qt; dq.classList.remove('flash'); void dq.offsetWidth; dq.classList.add('flash'); }
+  $('dEv').innerHTML = EV[sel].map(e => `<span>📎 ${e}</span>`).join('');
+
+  /* 쟁점: 같은 쟁점은 묶어서 "몇 명 중 몇 명"으로 */
+  const list = Object.values(iss).sort((a, b) => (a.lv === 'block' ? 0 : 1) - (b.lv === 'block' ? 0 : 1) || b.n - a.n);
+  const key = list.map(x => x.t + x.n).join('|');
+  if (key !== lastIss) {
+    lastIss = key;
+    $('issN').textContent = list.length + '건';
+    $('dIss').innerHTML = list.length
+      ? list.map((x, k) => `<div class="is ${x.lv}" style="animation-delay:${k*.06}s"><span>${x.p.emoji}</span><div><b>${x.lv === 'block' ? '🚨' : '⚠️'} ${x.t}<em class="is-n">${x.n}/${x.of}명</em></b><small>${x.d}</small></div></div>`).join('')
+      : `<div class="is none"><span>✅</span><div><b>감지된 사각지대 없음</b><small>그래도 실제 주민 확인은 필요합니다</small></div></div>`;
+  }
+}
+
+const cbIn = $('cb'), limIn = $('lim');
+function fill(inp){ const k = (inp.value - inp.min) / (inp.max - inp.min) * 100; inp.style.background = `linear-gradient(90deg,var(--glow) ${k}%,rgba(243,239,230,.15) ${k}%)`; }
+function syncUI(){
+  cbIn.value = S.cb; limIn.value = S.lim;
+  $('cbV').textContent = S.cb + '%'; $('limV').textContent = S.lim + '만';
+  fill(cbIn); fill(limIn);
+  document.querySelectorAll('.seg').forEach(g => g.querySelectorAll('button').forEach(b => b.classList.toggle('on', +b.dataset.v === S[g.dataset.k])));
+  document.querySelectorAll('.tg').forEach(t => t.classList.toggle('on', !!S[t.dataset.k]));
+}
+function changed(){ document.querySelectorAll('.pre').forEach(x => x.classList.remove('on')); syncUI(); render(); }
+cbIn.addEventListener('input', () => { S.cb = +cbIn.value; changed(); });
+limIn.addEventListener('input', () => { S.lim = +limIn.value; changed(); });
+document.querySelectorAll('.seg').forEach(g => g.addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return; S[g.dataset.k] = +b.dataset.v; changed();
+}));
+document.querySelectorAll('.tg').forEach(t => t.addEventListener('click', () => { S[t.dataset.k] = S[t.dataset.k] ? 0 : 1; changed(); }));
+document.querySelectorAll('.pre').forEach(b => b.addEventListener('click', () => {
+  Object.assign(S, PRESET[b.dataset.pre]); syncUI(); render();
+  document.querySelectorAll('.pre').forEach(x => x.classList.toggle('on', x === b));
+}));
+syncUI(); render();
+
+/* 시연 화면이 처음 보이면 자동으로 '인트로의 개편안'을 올려 광장이 흩어지는 모습을 보여줌 */
+const demoIO = new IntersectionObserver(es => {
+  if (es[0].isIntersecting) { demoIO.disconnect(); setTimeout(() => { sel = 'ok'; document.querySelector('.pre[data-pre="intro"]').click(); }, 1200); }
+}, {threshold:.4});
+demoIO.observe(agora);
+
+/* =========================================================
+   스크롤 등장 · 숫자 올라가기 · 기타 움직임
+   ========================================================= */
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+}), {threshold:.15, rootMargin:'0px 0px -6% 0px'});
+document.querySelectorAll('[data-reveal], .io').forEach(el => io.observe(el));
+
+const countIO = new IntersectionObserver(es => es.forEach(e => {
+  if (!e.isIntersecting) return;
+  countIO.unobserve(e.target);
+  const el = e.target, to = +el.dataset.count, t0 = performance.now();
+  const step = t => { const k = Math.min(1, (t - t0) / 1400); el.textContent = Math.round(to * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(step); };
+  requestAnimationFrame(step);
+}), {threshold:.5});
+let introOnce = false;
+function onIntroClosed(){
+  if (introOnce) return; introOnce = true;
+  setTimeout(() => document.querySelectorAll('[data-count]').forEach(el => countIO.observe(el)), 900);
+}
+
+const nav = $('nav'), prog = $('progress');
+addEventListener('scroll', () => {
+  const y = scrollY, h = document.documentElement.scrollHeight - innerHeight;
+  prog.style.width = (h > 0 ? y / h * 100 : 0) + '%';
+  nav.classList.toggle('scrolled', y > 30);
+}, {passive:true});
+
+const hero = document.querySelector('.hero');
+hero.addEventListener('mousemove', e => {
+  const r = hero.getBoundingClientRect();
+  hero.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+  hero.style.setProperty('--my', (e.clientY - r.top) + 'px');
+});
+
+const orbs = [...document.querySelectorAll('.orb')]; let oi = 0;
+const plaza = $('plaza');
+setInterval(() => {
+  orbs.forEach(o => o.classList.remove('talk'));
+  const o = orbs[oi++ % orbs.length], pr = plaza.getBoundingClientRect(), r = o.getBoundingClientRect();
+  const dx = r.left + r.width / 2 - (pr.left + pr.width / 2);   // 광장 오른쪽/왼쪽 끝이면 말풍선이 안쪽으로 펼쳐지게
+  o.classList.toggle('r', dx > pr.width * .2);
+  o.classList.toggle('l', dx < -pr.width * .2);
+  o.classList.add('talk');
+}, 2400);
+
+const cys = [...document.querySelectorAll('.cy')]; let ci = 1;
+setInterval(() => { cys.forEach((c,k) => c.classList.toggle('on', k === ci % cys.length)); ci++; }, 1300);
+
+document.querySelectorAll('.tilt').forEach(el => {
+  el.addEventListener('mousemove', e => {
+    const r = el.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+    el.style.transition = 'transform .15s';
+    el.style.transform = `perspective(700px) rotateX(${-y*10}deg) rotateY(${x*12}deg) translateY(-4px)`;
+  });
+  el.addEventListener('mouseleave', () => { el.style.transition = 'transform .6s'; el.style.transform = ''; });
+});
+document.querySelectorAll('.mag').forEach(b => {
+  b.addEventListener('mousemove', e => {
+    const r = b.getBoundingClientRect();
+    b.style.transform = `translate(${(e.clientX - r.left - r.width/2) * .25}px, ${(e.clientY - r.top - r.height/2) * .35}px)`;
+  });
+  b.addEventListener('mouseleave', () => { b.style.transform = ''; });
+});
+</script>
+</body>
+</html>
